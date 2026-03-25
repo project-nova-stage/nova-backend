@@ -9,10 +9,10 @@ Benvenuti nel repository ufficiale di **Project Nova**, il sistema gestionale sv
 - **Project Management:** Metodologia Agile (Notion + GitHub)
 
 ## 👥 Il Team
-- **Project Manager & DevOps:** [Tuo Nome]
-- **Backend Developer:** [Nome del collega]
-- **Frontend Developer & Marketing:** [Nome del collega]
-- **Full Stack / AI Specialist:** [Nome del collega]
+- **Project Manager & DevOps:** 
+- **Backend Developer:**
+- **Frontend Developer & Marketing:**
+- **Full Stack / AI Specialist:**
 
 ## 📅 Timeline
 - **Inizio:** 23 Marzo 2026
