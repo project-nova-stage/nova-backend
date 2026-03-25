@@ -3,7 +3,7 @@
 Benvenuti nel repository ufficiale di **Project Nova**, il sistema gestionale sviluppato per ottimizzare il flusso di vendita e magazzino di piccole attività commerciali.
 
 ## 🛠️ Stack Tecnologico
-- **Backend:** Java 17, Spring Boot, Spring Data JPA
+- **Backend:** Java 21, Spring Boot 4, Spring Data JPA
 - **Database:** MySQL / PostgreSQL
 - **Frontend:** Angular 16+
 - **Project Management:** Metodologia Agile (Notion + GitHub)
