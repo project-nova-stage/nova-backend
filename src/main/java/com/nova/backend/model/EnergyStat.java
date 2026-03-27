@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Entity
+@Entity 
 @Table(name = "energy_stat")
 @Getter
 @Setter

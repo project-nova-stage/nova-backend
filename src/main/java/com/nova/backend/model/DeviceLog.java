@@ -11,7 +11,7 @@ import java.time.Instant;
 @Entity
 @Table(name = "deviceLog")
 @Getter
-@Setter
+@Setter 
 public class DeviceLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
