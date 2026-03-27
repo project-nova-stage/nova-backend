@@ -7,9 +7,9 @@ Benvenuti nel repository ufficiale di **Project Nova**, il sistema gestionale sv
 - **Database:** MySQL / PostgreSQL
 - **Frontend:** Angular 16+
 - **Project Management:** Metodologia Agile (Notion + GitHub)
-  
+
   **Modello ER**
-<img width="8192" height="2697" alt="Modello ER" src="https://github.com/user-attachments/assets/95444a5b-1101-4bd0-913d-77995a2fde98" />
+<img width="8192" height="3825" alt="DB progetto nova-2026-03-27-033149" src="https://github.com/user-attachments/assets/ed96b66c-5d21-4bc1-93f2-a980f0007674" />
 
 ## 👥 Il Team
 - **Project Manager & DevOps:** 
