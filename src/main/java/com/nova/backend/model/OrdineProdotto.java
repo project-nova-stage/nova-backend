@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
 
+// Revisione: Rinominati campi in italiano ('ordine', 'prodotto', 'quantita', 'prezzoAcquisto') per allineamento regole di progetto.
 @Entity
 @Table(name = "order_items")
 @Getter
@@ -22,18 +23,20 @@ public class OrdineProdotto {
 
     //Relazione con Order
     @ManyToOne(fetch = FetchType.LAZY)
-    private Ordine order;
+    @JoinColumn(name = "order_id", nullable = false)
+    private Ordine ordine;
 
     //Relazione con Product
     @ManyToOne(fetch = FetchType.LAZY)
-    private Prodotto product;
+    @JoinColumn(name = "product_id", nullable = false)
+    private Prodotto prodotto;
 
-    @Column(nullable = false)
-    private Integer quantity;
+    @Column(name = "quantity", nullable = false)
+    private Integer quantita;
 
     //Prezzo stabilito al momento dell'acquisto
     @Column(name = "unit_price_snapshot", nullable = false, precision = 10, scale = 2)
-    private BigDecimal unitPriceSnapshot;
+    private BigDecimal prezzoAcquisto;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -46,13 +49,14 @@ public class OrdineProdotto {
     //Costruttori
     public OrdineProdotto() {}
 
-    public OrdineProdotto(Ordine order, Prodotto product, Integer quantity, BigDecimal unitPriceSnapshot) {
-        this.order = order;
-        this.product = product;
-        this.quantity = quantity;
-        this.unitPriceSnapshot = unitPriceSnapshot;
+    public OrdineProdotto(Ordine ordine, Prodotto prodotto, Integer quantita, BigDecimal prezzoAcquisto) {
+        this.ordine = ordine;
+        this.prodotto = prodotto;
+        this.quantita = quantita;
+        this.prezzoAcquisto = prezzoAcquisto;
     }
-    //in questa parte mi sono fatto aiutare con IA
+
+    // Equals allineato ai nuovi campi
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,10 +74,10 @@ public class OrdineProdotto {
     public String toString() {
         return "OrdineProdotto{" +
                 "id=" + id +
-                ", order=" + (order != null ? order.getId() : null) +
-                ", product=" + (product != null ? product.getId() : null) +
-                ", quantity=" + quantity +
-                ", unitPriceSnapshot=" + unitPriceSnapshot +
+                ", ordine=" + (ordine != null ? ordine.getId() : null) +
+                ", prodotto=" + (prodotto != null ? prodotto.getId() : null) +
+                ", quantita=" + quantita +
+                ", prezzoAcquisto=" + prezzoAcquisto +
                 '}';
     }
 }

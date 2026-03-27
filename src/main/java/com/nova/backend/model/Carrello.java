@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+// Revisione: Rinominati campi 'utente' e 'prodotti' per allineamento regole di progetto.
 @Entity
 @Table(name = "carts")
 @Getter
@@ -23,7 +24,7 @@ public class Carrello {
     //Un carrello per utente
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, unique = true)
-    private Utente user;
+    private Utente utente;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -34,16 +35,17 @@ public class Carrello {
     private LocalDateTime updatedAt;
 
     //Lista prodotti nel carrello
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CarrelloProdotto> items;
+    @OneToMany(mappedBy = "carrello", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CarrelloProdotto> prodotti;
 
     //costruttori
     public Carrello() {}
 
-    public Carrello(Utente user) {
-        this.user = user;
+    public Carrello(Utente utente) {
+        this.utente = utente;
     }
-    //qui mi sono fatto aiutare con IA 
+
+    // Equals controllato e allineato
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -61,7 +63,7 @@ public class Carrello {
     public String toString() {
         return "Carrello{" +
                 "id=" + id +
-                ", user=" + (user != null ? user.getId() : null) +
+                ", utente=" + (utente != null ? utente.getId() : null) +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';

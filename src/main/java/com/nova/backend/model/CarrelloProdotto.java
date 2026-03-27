@@ -14,6 +14,7 @@ import java.util.Objects;
  * Entità che rappresenta un item nel carrello di un utente,
  * collegando un prodotto al carrello con la quantità selezionata.
  */
+// Revisione: Rinominati campi 'carrello', 'prodotto', 'quantita' per allineamento regole di progetto.
 @Entity
 @Table(
     name = "cart_items",
@@ -30,15 +31,15 @@ public class CarrelloProdotto {
     // 🔗 Relazione con Cart
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", nullable = false)
-    private Carrello cart;
+    private Carrello carrello;
 
     // 🔗 Relazione con Product
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
-    private Prodotto product;
+    private Prodotto prodotto;
 
-    @Column(nullable = false)
-    private Integer quantity;
+    @Column(name = "quantity", nullable = false)
+    private Integer quantita;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -51,11 +52,12 @@ public class CarrelloProdotto {
     //Costruttori
     public CarrelloProdotto() {}
 
-    public CarrelloProdotto(Carrello cart, Prodotto product, Integer quantity) {
-        this.cart = cart;
-        this.product = product;
-        this.quantity = quantity;
+    public CarrelloProdotto(Carrello carrello, Prodotto prodotto, Integer quantita) {
+        this.carrello = carrello;
+        this.prodotto = prodotto;
+        this.quantita = quantita;
     }
+
     //in questa parte mi sono fatto aiutare con IA
     @Override
     public boolean equals(Object o) {
@@ -74,9 +76,9 @@ public class CarrelloProdotto {
     public String toString() {
         return "CarrelloProdotto{" +
                 "id=" + id +
-                ", cart=" + (cart != null ? cart.getId() : null) +
-                ", product=" + (product != null ? product.getId() : null) +
-                ", quantity=" + quantity +
+                ", carrello=" + (carrello != null ? carrello.getId() : null) +
+                ", prodotto=" + (prodotto != null ? prodotto.getId() : null) +
+                ", quantita=" + quantita +
                 '}';
     }
 }

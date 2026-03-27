@@ -14,6 +14,7 @@ import java.util.Objects;
 
 import com.nova.backend.model.enums.StatoOrdine;
 
+// Revisione: Rinominati campi in italiano (es. 'utente', 'numeroOrdine', 'stato') per allineamento regole di progetto.
 @Entity
 @Table(name = "orders") 
 @Getter
@@ -27,23 +28,23 @@ public class Ordine {
     //Relazione con User
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private Utente user;
+    private Utente utente;
 
     @Column(name = "order_number", nullable = false, unique = true, length = 50)
-    private String orderNumber;
+    private String numeroOrdine;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private StatoOrdine status;
+    @Column(name = "status", nullable = false)
+    private StatoOrdine stato;
 
     @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalAmount;
+    private BigDecimal importoTotale;
 
     @Column(name = "ordered_at", nullable = false)
-    private LocalDateTime orderedAt;
+    private LocalDateTime dataOrdine;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrdineProdotto> items;
+    @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrdineProdotto> prodotti;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -56,36 +57,37 @@ public class Ordine {
     //Costruttori
     public Ordine() {}
 
-    public Ordine(Utente user, String orderNumber, StatoOrdine status, BigDecimal totalAmount, LocalDateTime orderedAt) {
-        this.user = user;
-        this.orderNumber = orderNumber;
-        this.status = status;
-        this.totalAmount = totalAmount;
-        this.orderedAt = orderedAt;
+    public Ordine(Utente utente, String numeroOrdine, StatoOrdine stato, BigDecimal importoTotale, LocalDateTime dataOrdine) {
+        this.utente = utente;
+        this.numeroOrdine = numeroOrdine;
+        this.stato = stato;
+        this.importoTotale = importoTotale;
+        this.dataOrdine = dataOrdine;
     }
-    //in questa parte mi sono fatto aiutare con IA
+
+    // Equals allineato ai nuovi campi
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ordine ordine = (Ordine) o;
-        return Objects.equals(id, ordine.id) && Objects.equals(orderNumber, ordine.orderNumber);
+        return Objects.equals(id, ordine.id) && Objects.equals(numeroOrdine, ordine.numeroOrdine);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, orderNumber);
+        return Objects.hash(id, numeroOrdine);
     }
 
     @Override
     public String toString() {
         return "Ordine{" +
                 "id=" + id +
-                ", user=" + (user != null ? user.getId() : null) +
-                ", orderNumber='" + orderNumber + '\'' +
-                ", status=" + status +
-                ", totalAmount=" + totalAmount +
-                ", orderedAt=" + orderedAt +
+                ", utente=" + (utente != null ? utente.getId() : null) +
+                ", numeroOrdine='" + numeroOrdine + '\'' +
+                ", stato=" + stato +
+                ", importoTotale=" + importoTotale +
+                ", dataOrdine=" + dataOrdine +
                 '}';
     }
 }

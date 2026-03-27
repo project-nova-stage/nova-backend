@@ -11,6 +11,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
+// Revisione: Rinominati campi in italiano ('nome', 'prezzo', 'quantitaDisponibile', 'attivo') per allineamento regole di progetto.
 @Entity
 @Table(name = "products")
 @Getter
@@ -24,20 +25,20 @@ public class Prodotto {
     @Column(nullable = false, unique = true, length = 50)
     private String sku;
 
-    @Column(nullable = false, length = 100)
-    private String name;
+    @Column(name = "name", nullable = false, length = 100)
+    private String nome;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    @Column(name = "price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal prezzo;
 
     @Column(name = "stock_quantity", nullable = false)
-    private Integer stockQuantity;
+    private Integer quantitaDisponibile;
 
     @Column(name = "is_active", nullable = false)
-    private Boolean isActive = true;
+    private Boolean attivo = true;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrdineProdotto> orderItems;
+    @OneToMany(mappedBy = "prodotto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrdineProdotto> ordini;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -50,14 +51,15 @@ public class Prodotto {
     // Costruttori
     public Prodotto() {}
 
-    public Prodotto(String sku, String name, BigDecimal price, Integer stockQuantity, Boolean isActive) {
+    public Prodotto(String sku, String nome, BigDecimal prezzo, Integer quantitaDisponibile, Boolean attivo) {
         this.sku = sku;
-        this.name = name;
-        this.price = price;
-        this.stockQuantity = stockQuantity;
-        this.isActive = isActive != null ? isActive : true;
+        this.nome = nome;
+        this.prezzo = prezzo;
+        this.quantitaDisponibile = quantitaDisponibile;
+        this.attivo = attivo != null ? attivo : true;
     }
-    //in questa parte mi sono fatto aiutare con IA
+
+    // Equals e HashCode allineati ai nuovi campi
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -76,10 +78,10 @@ public class Prodotto {
         return "Prodotto{" +
                 "id=" + id +
                 ", sku='" + sku + '\'' +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", stockQuantity=" + stockQuantity +
-                ", isActive=" + isActive +
+                ", nome='" + nome + '\'' +
+                ", prezzo=" + prezzo +
+                ", quantitaDisponibile=" + quantitaDisponibile +
+                ", attivo=" + attivo +
                 '}';
     }
 }
