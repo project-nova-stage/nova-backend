@@ -3,7 +3,7 @@ package com.nova.backend.model;
 import com.nova.backend.model.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.Setter; 
 
 @Entity
 @Table(name = "device")

@@ -2,7 +2,7 @@ package com.nova.backend.model;
 
 import com.nova.backend.model.enums.EventType;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.Getter; 
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
