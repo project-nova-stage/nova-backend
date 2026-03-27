@@ -10,7 +10,11 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
 
-// Revisione: Rinominati campi in italiano ('ordine', 'prodotto', 'quantita', 'prezzoAcquisto') per allineamento regole di progetto.
+/**
+ * Line-Item dello scontrino digitale/Ordine.
+ * Questa classe de-normalizza il prezzo memorizzandolo staticamente per evitare che
+ * i cambiamenti di prezzo successivi del catalogo alterino lo storico contabile.
+ */
 @Entity
 @Table(name = "order_items")
 @Getter
@@ -21,20 +25,21 @@ public class OrdineProdotto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //Relazione con Order
+    // Testata ordine di appartenenza
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Ordine ordine;
 
-    //Relazione con Product
+    // Prodotto target venduto
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Prodotto prodotto;
 
+    // Volumetria venduta per questa riga
     @Column(name = "quantity", nullable = false)
     private Integer quantita;
 
-    //Prezzo stabilito al momento dell'acquisto
+    // [CRITICAL] Immagine logica del prezzo al momento esatto del checkout persistita in DB
     @Column(name = "unit_price_snapshot", nullable = false, precision = 10, scale = 2)
     private BigDecimal prezzoAcquisto;
 
@@ -46,7 +51,6 @@ public class OrdineProdotto {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    //Costruttori
     public OrdineProdotto() {}
 
     public OrdineProdotto(Ordine ordine, Prodotto prodotto, Integer quantita, BigDecimal prezzoAcquisto) {
@@ -56,7 +60,6 @@ public class OrdineProdotto {
         this.prezzoAcquisto = prezzoAcquisto;
     }
 
-    // Equals allineato ai nuovi campi
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

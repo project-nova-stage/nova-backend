@@ -11,7 +11,10 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
-// Revisione: Rinominati campi in italiano ('nome', 'prezzo', 'quantitaDisponibile', 'attivo') per allineamento regole di progetto.
+/**
+ * Entità del catalogo referenziata in carrelli e ordini.
+ * Racchiude i dati basilari di vendita e lo stato corrente dell'inventario.
+ */
 @Entity
 @Table(name = "products")
 @Getter
@@ -22,6 +25,7 @@ public class Prodotto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Codice identificativo univoco (Stock Keeping Unit)
     @Column(nullable = false, unique = true, length = 50)
     private String sku;
 
@@ -31,12 +35,28 @@ public class Prodotto {
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal prezzo;
 
+    // Quantità a magazzino
     @Column(name = "stock_quantity", nullable = false)
     private Integer quantitaDisponibile;
 
+    // Flag logico per la rimozione del prodotto senza eliminare lo storico degli ordini
     @Column(name = "is_active", nullable = false)
     private Boolean attivo = true;
 
+    // Riferimento alla categoria principale della gerarchia
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Categoria categoria;
+
+    // Lista in cascata delle immagini relative al prodotto
+    @OneToMany(mappedBy = "prodotto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ImmagineProdotto> immagini;
+
+    // Lista in cascata dei dettagli/specifiche tecniche (es. "Colore", "Nero")
+    @OneToMany(mappedBy = "prodotto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SpecificaProdotto> specifiche;
+
+    // Mappatura bidirezionale dello storico acquisti (solo lettura/navigazione)
     @OneToMany(mappedBy = "prodotto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrdineProdotto> ordini;
 
@@ -48,7 +68,6 @@ public class Prodotto {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    // Costruttori
     public Prodotto() {}
 
     public Prodotto(String sku, String nome, BigDecimal prezzo, Integer quantitaDisponibile, Boolean attivo) {
@@ -59,7 +78,7 @@ public class Prodotto {
         this.attivo = attivo != null ? attivo : true;
     }
 
-    // Equals e HashCode allineati ai nuovi campi
+    // Equals basato unicamente sui campi identificativi di business (id e sku) per coerenza in Set/Collection
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -6,15 +6,14 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-
 import java.time.Instant;
 import java.util.Objects;
 
 /**
- * Entità che rappresenta un item nel carrello di un utente,
- * collegando un prodotto al carrello con la quantità selezionata.
+ * Entità ponte tra il Cart e il Product. 
+ * Rappresenta la riga singola del carrello (line-item) salvando la quantità selezionata.
+ * Implementa una UniqueConstraint per scongiurare dati duplicati in tabella.
  */
-// Revisione: Rinominati campi 'carrello', 'prodotto', 'quantita' per allineamento regole di progetto.
 @Entity
 @Table(
     name = "cart_items",
@@ -28,16 +27,17 @@ public class CarrelloProdotto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 🔗 Relazione con Cart
+    // 🔗 Relazione gerarchica col Padre (Carrello)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", nullable = false)
     private Carrello carrello;
 
-    // 🔗 Relazione con Product
+    // 🔗 Relazione di referenza al Catalogo (Prodotto fisico o logico)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Prodotto prodotto;
 
+    // Molteplicità dell'oggetto in riga
     @Column(name = "quantity", nullable = false)
     private Integer quantita;
 
@@ -49,7 +49,6 @@ public class CarrelloProdotto {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    //Costruttori
     public CarrelloProdotto() {}
 
     public CarrelloProdotto(Carrello carrello, Prodotto prodotto, Integer quantita) {
@@ -58,7 +57,7 @@ public class CarrelloProdotto {
         this.quantita = quantita;
     }
 
-    //in questa parte mi sono fatto aiutare con IA
+    // Costrutto standard per set mapping ed evitare collisioni nei detach
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

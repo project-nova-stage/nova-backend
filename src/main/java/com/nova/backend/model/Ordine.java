@@ -14,7 +14,10 @@ import java.util.Objects;
 
 import com.nova.backend.model.enums.StatoOrdine;
 
-// Revisione: Rinominati campi in italiano (es. 'utente', 'numeroOrdine', 'stato') per allineamento regole di progetto.
+/**
+ * Entità Core per le transazioni economiche del sistema.
+ * Custodisce storicamente l'atto di acquisto svincolato dal carrello.
+ */
 @Entity
 @Table(name = "orders") 
 @Getter
@@ -25,24 +28,29 @@ public class Ordine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //Relazione con User
+    // Referenza cliente che ha effettuato il checkout
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private Utente utente;
 
+    // Identificativo alfanumerico esposto all'utente (human-readable)
     @Column(name = "order_number", nullable = false, unique = true, length = 50)
     private String numeroOrdine;
 
+    // Lifecycle manager tramite enumerazione persistita come Stringa
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private StatoOrdine stato;
 
+    // Totale calcolato (somma righe + eventuali tasse/spedizioni) memorizzato storicamente
     @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal importoTotale;
 
+    // Data formale di ricezione e validazione pagamento o checkout
     @Column(name = "ordered_at", nullable = false)
     private LocalDateTime dataOrdine;
 
+    // Voci dell'ordine trattate come attributi logici indivisibili dell'ordine macroscopico
     @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrdineProdotto> prodotti;
 
@@ -54,7 +62,6 @@ public class Ordine {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    //Costruttori
     public Ordine() {}
 
     public Ordine(Utente utente, String numeroOrdine, StatoOrdine stato, BigDecimal importoTotale, LocalDateTime dataOrdine) {
@@ -65,7 +72,7 @@ public class Ordine {
         this.dataOrdine = dataOrdine;
     }
 
-    // Equals allineato ai nuovi campi
+    // Equals basato strict su identificatori logici univoci (numeroOrdine oltre ad id)
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
