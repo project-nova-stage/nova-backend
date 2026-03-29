@@ -30,7 +30,7 @@ public class SpecificaProdotto {
     private String etichetta;
 
     // Valore della metrica (es. "220V")
-    @Column(name = "value", nullable = false, length = 255)
+    @Column(name = "product_value", nullable = false, length = 255)
     private String valore;
 
     public SpecificaProdotto() {}
