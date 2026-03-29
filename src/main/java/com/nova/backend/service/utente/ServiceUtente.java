@@ -3,10 +3,12 @@ package com.nova.backend.service.utente;
 import com.nova.backend.model.utente.Ruolo;
 import com.nova.backend.model.utente.TipoCliente;
 import com.nova.backend.model.utente.Utente;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class ServiceUtente {
     private final UtenteRepository utenteRepository;
     private final PasswordEncoder passwordEncoder;
