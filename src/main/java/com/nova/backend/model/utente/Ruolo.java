@@ -1,9 +1,5 @@
 package com.nova.backend.model.utente;
 
-import com.nova.backend.model.ordine.Ordine;
-
-import com.nova.backend.model.ordine.Carrello;
-
 /**
  * Macrostati globali di gestione delle autorizzazioni (RBAC - Role Based Access Control).
  * Mappati dinamicamente nei GrantedAuthority di Spring Security.

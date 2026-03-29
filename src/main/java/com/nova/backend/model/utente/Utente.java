@@ -53,14 +53,14 @@ public class Utente implements UserDetails {
     @Column(name = "customer_type", length = 10)
     private TipoCliente tipoCliente;
 
+    // Flag per la disabilitazione soft dell'account (ban, sospensione, soft delete)
+    @Column(name = "is_active", nullable = false)
+    private boolean attivo = true;
+
     // Data di registrazione generata automaticamente dal framework alla prima persistenza
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
-
-    public Long getId() {
-        return id;
-    }
 
     // =========================================
     // Metodi implementati dall'interfaccia UserDetails
@@ -102,6 +102,6 @@ public class Utente implements UserDetails {
     // Identifica se l'account è disabilitato (utile per soft delete o ban temporanei)
     @Override
     public boolean isEnabled() {
-        return true;
+        return attivo;
     }
 }

@@ -10,7 +10,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,7 +47,7 @@ public class Ordine {
 
     // Data formale di ricezione e validazione pagamento o checkout
     @Column(name = "ordered_at", nullable = false)
-    private LocalDateTime dataOrdine;
+    private Instant dataOrdine;
 
     // Voci dell'ordine trattate come attributi logici indivisibili dell'ordine macroscopico
     @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -62,13 +61,9 @@ public class Ordine {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    public Long getId() {
-        return id;
-    }
-
     public Ordine() {}
 
-    public Ordine(Utente utente, String numeroOrdine, StatoOrdine stato, BigDecimal importoTotale, LocalDateTime dataOrdine) {
+    public Ordine(Utente utente, String numeroOrdine, StatoOrdine stato, BigDecimal importoTotale, Instant dataOrdine) {
         this.utente = utente;
         this.numeroOrdine = numeroOrdine;
         this.stato = stato;

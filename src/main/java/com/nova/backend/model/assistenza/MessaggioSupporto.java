@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
  * Singolo messaggio all'interno di una conversazione di supporto.
@@ -38,8 +38,8 @@ public class MessaggioSupporto {
     private String contenuto;
 
     @CreationTimestamp
-    @Column(name = "sent_at", updatable = false)
-    private LocalDateTime dataInvio;
+    @Column(name = "sent_at", nullable = false, updatable = false)
+    private Instant dataInvio;
 
     public MessaggioSupporto() {}
 

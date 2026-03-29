@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
  * Sistema di alert e comunicazioni push/in-app per l'utente.
@@ -39,8 +39,8 @@ public class Notifica {
     private Boolean letta = false;
 
     @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime dataCreazione;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant dataCreazione;
 
     public Notifica() {}
 
