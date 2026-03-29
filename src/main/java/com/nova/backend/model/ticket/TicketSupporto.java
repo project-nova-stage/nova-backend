@@ -24,7 +24,7 @@ public class TicketSupporto {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private Utente utente; // Assicurati che la classe si chiami Utente o User
+    private Utente utente;
 
     @Column(nullable = false, length = 255)
     private String subject;
