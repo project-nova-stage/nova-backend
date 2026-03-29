@@ -1,7 +1,5 @@
 package com.nova.backend.model.assistenza;
 
-import com.nova.backend.model.ordine.Ordine;
-
 /**
  * Stati del ciclo di vita di una richiesta di servizio (lead).
  */

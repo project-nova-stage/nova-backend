@@ -59,7 +59,7 @@ public class Prodotto {
     private List<SpecificaProdotto> specifiche;
 
     // Mappatura bidirezionale dello storico acquisti (solo lettura/navigazione)
-    @OneToMany(mappedBy = "prodotto", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "prodotto")
     private List<OrdineProdotto> ordini;
 
     @CreationTimestamp
@@ -69,10 +69,6 @@ public class Prodotto {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
-
-    public Long getId() {
-        return id;
-    }
 
     public Prodotto() {}
 

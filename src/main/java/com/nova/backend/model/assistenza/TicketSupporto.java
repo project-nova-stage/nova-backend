@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,8 +48,8 @@ public class TicketSupporto {
 
     // Istante di apertura automatizzato
     @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime dataCreazione;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant dataCreazione;
 
     // Conversazione interna associata al ticket
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)

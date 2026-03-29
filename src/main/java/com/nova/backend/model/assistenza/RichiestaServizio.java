@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
  * Entità per la gestione delle richieste di sopralluogo o preventivo.
@@ -44,8 +44,8 @@ public class RichiestaServizio {
 
     // Data di inserimento del lead
     @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime dataCreazione;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant dataCreazione;
 
     public RichiestaServizio() {}
 

@@ -8,7 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,16 +34,12 @@ public class Carrello {
     // Istante esatto in cui il carrello è stato istanziato al primo accesso
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     // Aggiornato in automatico da Hibernate a ogni modifica degli elementi interni
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
-
-    public Long getId() {
-        return id;
-    }
+    private Instant updatedAt;
 
     // Elementi contenuti nel carrello, gestiti in composizione forte (CascadeType.ALL)
     @OneToMany(mappedBy = "carrello", cascade = CascadeType.ALL, orphanRemoval = true)

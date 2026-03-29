@@ -1,7 +1,5 @@
 package com.nova.backend.model.iot;
 
-import com.nova.backend.model.assistenza.Notifica;
-
 /**
  * Tipologie di eventi telemetrici o diagnostici generati dai dispositivi.
  */

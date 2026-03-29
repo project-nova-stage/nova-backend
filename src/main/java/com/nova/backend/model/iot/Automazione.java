@@ -5,6 +5,10 @@ import com.nova.backend.model.utente.Utente;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.Instant;
 
 /**
  * Entità per la gestione delle regole di automazione domotica.
@@ -42,6 +46,14 @@ public class Automazione {
     // Flag di abilitazione della regola
     @Column(name = "is_active", nullable = false)
     private Boolean attiva = true;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
 
     public Automazione() {}
 

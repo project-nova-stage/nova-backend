@@ -5,8 +5,10 @@ import com.nova.backend.model.utente.Utente;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 
 /**
@@ -38,8 +40,12 @@ public class StatisticaEnergia {
     private LocalDate data;
 
     // Consumo espresso in chilowattora
-    @Column(name = "consumption_kwh", precision = 10, scale = 4)
+    @Column(name = "consumption_kwh", nullable = false, precision = 10, scale = 4)
     private BigDecimal consumoKwh;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
 
     public StatisticaEnergia() {}
 

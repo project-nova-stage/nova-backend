@@ -8,6 +8,10 @@ import com.nova.backend.model.catalogo.Prodotto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.Instant;
 
 /**
  * Rappresenta un'istanza fisica di un prodotto IoT installata presso un utente.
@@ -48,6 +52,14 @@ public class Dispositivo {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     private StatoDispositivo stato;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
 
     public Dispositivo() {}
 
