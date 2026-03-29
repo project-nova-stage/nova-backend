@@ -47,19 +47,19 @@ Ticketing e servizi d'installazione sul campo.
 
 ## 🟡 FASE 2 — Livello Dati (Repository Base)
 Query JPA per estrarre e manipolare le entità prodotte finora.
-- **[Da fare]** `UserRepository`
-- **[Da fare]** `CategoryRepository`, `ProductRepository`
-- **[Da fare]** `CartRepository`, `OrderRepository`
-- **[Da fare]** Livello Data per IoT (`DeviceRepository`, `AutomationRepository`) e Supporto (`SupportTicketRepository`...)
+- **[Fatto]** `UserRepository`
+- **[Fatto]** `CategoryRepository`, `ProductRepository`
+- **[Fatto]** `CartRepository`, `OrderRepository`
+- **[Fatto]** Livello Data per IoT (`DeviceRepository`, `AutomationRepository`) e Supporto (`SupportTicketRepository`...)
 
 ---
 
 ## 🟠 FASE 3 — Scambio Dati (DTO & Mapper)
 Disaccoppiamento totale dal database e sanificazione con @Valid.
-- **[Da fare]** DTO per Auth (`RegisterRequest`, `LoginRequest`).
-- **[Da fare]** DTO per Catalogo (`ProductRequest`, `ProductResponse`).
-- **[Da fare]** DTO per Checkout (`CartResponse`, `OrderRequest`, `OrderResponse`).
-- **[Da fare]** Istanziamento dei vari Mapper (`UserMapper`, `ProductMapper`...).
+- **[In sviluppo]** DTO per Auth (`RegisterRequest`, `LoginRequest`).
+- **[In sviluppo]** DTO per Catalogo (`ProductRequest`, `ProductResponse`).
+- **[In sviluppo]** DTO per Checkout (`CartResponse`, `OrderRequest`, `OrderResponse`).
+- **[In sviluppo]** Istanziamento dei vari Mapper (`UserMapper`, `ProductMapper`...).
 
 ---
 
