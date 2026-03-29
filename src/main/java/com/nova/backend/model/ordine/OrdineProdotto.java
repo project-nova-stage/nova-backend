@@ -1,4 +1,6 @@
-package com.nova.backend.model;
+package com.nova.backend.model.ordine;
+
+import com.nova.backend.model.catalogo.Prodotto;
 
 import jakarta.persistence.*;
 import lombok.Getter;

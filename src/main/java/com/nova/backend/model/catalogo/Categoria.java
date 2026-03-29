@@ -1,4 +1,4 @@
-package com.nova.backend.model;
+package com.nova.backend.model.catalogo;
 
 import jakarta.persistence.*;
 import lombok.Getter;

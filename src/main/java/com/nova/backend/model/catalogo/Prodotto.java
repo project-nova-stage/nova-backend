@@ -1,4 +1,6 @@
-package com.nova.backend.model;
+package com.nova.backend.model.catalogo;
+
+import com.nova.backend.model.ordine.OrdineProdotto;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -67,6 +69,10 @@ public class Prodotto {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
+
+    public Long getId() {
+        return id;
+    }
 
     public Prodotto() {}
 

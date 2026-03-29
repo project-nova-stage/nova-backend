@@ -1,4 +1,4 @@
-package com.nova.backend.model.enums;
+package com.nova.backend.model.utente;
 
 /**
  * Identifica la tipologia di clientela su livello Business. 

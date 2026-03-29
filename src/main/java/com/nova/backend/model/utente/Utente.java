@@ -1,7 +1,7 @@
-package com.nova.backend.model;
+package com.nova.backend.model.utente;
 
-import com.nova.backend.model.enums.Ruolo;
-import com.nova.backend.model.enums.TipoCliente;
+
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -58,6 +58,10 @@ public class Utente implements UserDetails {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
+    public Long getId() {
+        return id;
+    }
+
     // =========================================
     // Metodi implementati dall'interfaccia UserDetails
     // =========================================
@@ -68,6 +72,11 @@ public class Utente implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + ruolo.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     @Override

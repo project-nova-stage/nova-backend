@@ -1,4 +1,6 @@
-package com.nova.backend.model;
+package com.nova.backend.model.ordine;
+
+import com.nova.backend.model.utente.Utente;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -38,6 +40,10 @@ public class Carrello {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    public Long getId() {
+        return id;
+    }
 
     // Elementi contenuti nel carrello, gestiti in composizione forte (CascadeType.ALL)
     @OneToMany(mappedBy = "carrello", cascade = CascadeType.ALL, orphanRemoval = true)

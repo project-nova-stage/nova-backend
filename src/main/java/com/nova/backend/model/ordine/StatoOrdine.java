@@ -1,4 +1,4 @@
-package com.nova.backend.model.enums;
+package com.nova.backend.model.ordine;
 
 /**
  * Gestione dello stato di vita (State Machine base) dell'ordine.

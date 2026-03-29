@@ -29,19 +29,19 @@ E-commerce engine per il checkout utente.
 
 ### 🔹 Ciclo 4 — IoT & Automazione
 Integrazione con dispositivi smart e domotica.
-- **[Da fare]** `enums/StatoDispositivo.java`, `enums/TipoEvento.java`: Logging base IoT.
-- **[Da fare]** `model/Dispositivo.java`: Registrazione hardware associato all'utente.
-- **[Da fare]** `model/LogDispositivo.java`: Eventi telemetrici inviati dal dispositivo.
-- **[Da fare]** `model/StatisticaEnergia.java`: Aggregazione consumi mensili/giornalieri.
-- **[Da fare]** `model/Automazione.java`: Regole condizionali utente per IoT.
+- **[Fatto]** `enums/StatoDispositivo.java`, `enums/TipoEvento.java`: Logging base IoT.
+- **[Fatto]** `model/Dispositivo.java`: Registrazione hardware associato all'utente.
+- **[Fatto]** `model/LogDispositivo.java`: Eventi telemetrici inviati dal dispositivo.
+- **[Fatto]** `model/StatisticaEnergia.java`: Aggregazione consumi mensili/giornalieri.
+- **[Fatto]** `model/Automazione.java`: Regole condizionali utente per IoT.
 
 ### 🔹 Ciclo 5 — Assistenza Clienti
 Ticketing e servizi d'installazione sul campo.
-- **[Da fare]** `model/RichiestaServizio.java`, `model/TicketSupporto.java`, `model/MessaggioSupporto.java`: Ticketing post-vendita.
-- **[Da fare]** `model/Installazione.java`: Richiesta intervento tecnico in loco.
-- **[Da fare]** Enum associati (`TipoProgetto`, `StatoServizio`, `StatoInstallazione`, `PrioritaTicket`, `StatoTicket`).
-- **[Da fare]** `model/Notifica.java`: Engine per avvisi push ed email.
-- **[Da fare]** `model/Recensione.java`: Feedback per l'intero sistema nova.
+- **[Fatto]** `model/RichiestaServizio.java`, `model/TicketSupporto.java`, `model/MessaggioSupporto.java`: Ticketing post-vendita.
+- **[Fatto]** `model/Installazione.java`: Richiesta intervento tecnico in loco.
+- **[Fatto]** Enum associati (`TipoProgetto`, `StatoServizio`, `StatoInstallazione`, `PrioritaTicket`, `StatoTicket`).
+- **[Fatto]** `model/Notifica.java`: Engine per avvisi push ed email.
+- **[Fatto]** `model/Recensione.java`: Feedback per l'intero sistema nova.
 
 ---
 

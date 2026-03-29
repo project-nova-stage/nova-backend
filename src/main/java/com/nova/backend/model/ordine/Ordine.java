@@ -1,4 +1,6 @@
-package com.nova.backend.model;
+package com.nova.backend.model.ordine;
+
+import com.nova.backend.model.utente.Utente;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,8 +13,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-
-import com.nova.backend.model.enums.StatoOrdine;
 
 /**
  * Entità Core per le transazioni economiche del sistema.
@@ -61,6 +61,10 @@ public class Ordine {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
+
+    public Long getId() {
+        return id;
+    }
 
     public Ordine() {}
 

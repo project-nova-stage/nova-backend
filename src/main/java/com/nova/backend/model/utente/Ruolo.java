@@ -1,4 +1,8 @@
-package com.nova.backend.model.enums;
+package com.nova.backend.model.utente;
+
+import com.nova.backend.model.ordine.Ordine;
+
+import com.nova.backend.model.ordine.Carrello;
 
 /**
  * Macrostati globali di gestione delle autorizzazioni (RBAC - Role Based Access Control).

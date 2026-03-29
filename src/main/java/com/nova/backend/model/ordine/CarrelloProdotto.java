@@ -1,4 +1,6 @@
-package com.nova.backend.model;
+package com.nova.backend.model.ordine;
+
+import com.nova.backend.model.catalogo.Prodotto;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -27,12 +29,12 @@ public class CarrelloProdotto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 🔗 Relazione gerarchica col Padre (Carrello)
+    // Relazione gerarchica col Padre (Carrello)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", nullable = false)
     private Carrello carrello;
 
-    // 🔗 Relazione di referenza al Catalogo (Prodotto fisico o logico)
+    // Relazione di referenza al Catalogo (Prodotto fisico o logico)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Prodotto prodotto;
