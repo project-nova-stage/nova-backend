@@ -1,11 +1,17 @@
 package com.nova.backend.service.utente;
 
+import com.nova.backend.DTO.ErrorResponse;
+import com.nova.backend.DTO.RequestRegistrazione;
+import com.nova.backend.DTO.ResponseOBJ;
 import com.nova.backend.model.utente.Ruolo;
 import com.nova.backend.model.utente.TipoCliente;
 import com.nova.backend.model.utente.Utente;
+import com.nova.backend.repository.UtenteRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -24,10 +30,10 @@ public class ServiceUtente {
      */
 
     //REGISTRAZIONE UTENTE
-    public Object registrazioneUtente(DTO req) {
+    public Object registrazioneUtente(RequestRegistrazione req) {
         //VERIFICA SE L'UTENTE ESISTE GIA TRAMITE EMAIL
         if(this.utenteRepository.existsByEmail(req.getEmail())){
-            return return new DTO("Email already in use", 401, System.currentTimeMillis());
+            return new ErrorResponse("Email gia in uso", 401, System.currentTimeMillis());
         }
         //INSERIMENTO DEI DATI
         //modificare con il DTO
@@ -38,18 +44,22 @@ public class ServiceUtente {
         //VERIFICHE
         //------------------------------------------------------------------------------
         if(ruoloValido(req.getRuolo())){
-            utente.setRuolo(req.getRuolo());
-        }else {return new DTO("Email already in use", 401, System.currentTimeMillis());}
+            utente.setRuolo(Ruolo.valueOf(req.getRuolo()));
+        }else {return new ErrorResponse("Ruolo inesistente", 401, System.currentTimeMillis());}
         if(tipoValido(req.getTipoCliente())){
-            utente.setTipoCliente(req.getTipoCliente());
-        }else {return new DTO("Email already in use", 401, System.currentTimeMillis());}
+            utente.setTipoCliente(TipoCliente.valueOf(req.getTipoCliente()));
+        }else {return new ErrorResponse("Tipo inesistente", 401, System.currentTimeMillis());}
         //------------------------------------------------------------------------------
         utente.setPassword(passwordEncoder.encode(req.getPassword()));
         utente.setAttivo(true);
-        utenteRepository.save(utente);
+        Utente utenteSalvato = utenteRepository.save(utente);
 
         //modificare con il DTO
-        return new DTO("User registered successfully", userSave);
+        return new ResponseOBJ("Utente registrato correttamente", utenteSalvato);
+    }
+
+    public List<Utente> findAllUsers(){
+        return this.utenteRepository.findAll();
     }
 
     //VERIFICA SE QUELLO CHE VIENE INSERITO CORRISPONDE ALL'ENUM
