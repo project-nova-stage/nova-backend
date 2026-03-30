@@ -1,9 +1,9 @@
 package com.nova.backend.model.assistenza;
 
 import com.nova.backend.model.utente.Utente;
-
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -17,6 +17,7 @@ import java.time.Instant;
 @Table(name = "support_messages")
 @Getter
 @Setter
+@NoArgsConstructor
 public class MessaggioSupporto {
 
     @Id
@@ -34,21 +35,19 @@ public class MessaggioSupporto {
     private Utente mittente;
 
     // Contenuto testuale della comunicazione
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "message_content", nullable = false, columnDefinition = "TEXT")
     private String contenuto;
 
     @CreationTimestamp
-    @Column(name = "sent_at", nullable = false, updatable = false)
-    private Instant dataInvio;
-
-    public MessaggioSupporto() {}
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant dataCreazione;
 
     @Override
     public String toString() {
         return "MessaggioSupporto{" +
                 "id=" + id +
                 ", contenuto='" + (contenuto != null && contenuto.length() > 20 ? contenuto.substring(0, 20) + "..." : contenuto) + '\'' +
-                ", dataInvio=" + dataInvio +
+                ", dataCreazione=" + dataCreazione +
                 '}';
     }
 }

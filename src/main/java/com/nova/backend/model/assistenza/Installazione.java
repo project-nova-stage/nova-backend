@@ -1,15 +1,12 @@
 package com.nova.backend.model.assistenza;
 
-import com.nova.backend.model.utente.Utente;
 import com.nova.backend.model.ordine.Ordine;
-
+import com.nova.backend.model.utente.Utente;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 /**
@@ -20,6 +17,7 @@ import java.time.LocalDateTime;
 @Table(name = "installations")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Installazione {
 
     @Id
@@ -49,16 +47,6 @@ public class Installazione {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private StatoInstallazione stato;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt;
-
-    public Installazione() {}
 
     @Override
     public String toString() {
