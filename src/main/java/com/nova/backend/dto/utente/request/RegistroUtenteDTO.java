@@ -27,4 +27,7 @@ public class RegistroUtenteDTO {
 
     /** Opzionale: ruolo assegnato. Default CLIENTE se assente. */
     private String codiceRuolo;
+
+    /** Opzionale: tipo cliente (B2C o B2B). Non applicabile ad ADMIN o TECNICO. */
+    private String tipoCliente;
 }
