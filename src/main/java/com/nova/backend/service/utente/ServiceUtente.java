@@ -69,7 +69,7 @@ public class ServiceUtente {
         utente.setAttivo(true);
         Utente utenteSalvato = utenteRepository.save(utente);
 
-        return new RispostaGenerica("Utente registrato correttamente", utenteSalvato);
+        return new RispostaGenerica("Utente registrato correttamente", UtenteMapper.toResponse(utenteSalvato));
     }
 
     public List<UserResponseDTO> findAllUsers() {
