@@ -47,8 +47,11 @@ public class ServiceUtente {
             utente.setRuolo(Ruolo.CLIENTE);
         }
 
-        // TipoCliente: opzionale
+        // TipoCliente: applicabile solo al ruolo CLIENTE
         if (req.getTipoCliente() != null && !req.getTipoCliente().isBlank()) {
+            if (utente.getRuolo() != Ruolo.CLIENTE) {
+                return new RispostaErrore("Il tipo cliente non è applicabile per il ruolo " + utente.getRuolo().name(), 400, System.currentTimeMillis());
+            }
             if (tipoValido(req.getTipoCliente())) {
                 utente.setTipoCliente(TipoCliente.valueOf(req.getTipoCliente()));
             } else {

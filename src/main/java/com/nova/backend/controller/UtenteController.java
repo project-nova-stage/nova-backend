@@ -5,6 +5,7 @@ import com.nova.backend.dto.utente.request.RegistroUtenteDTO;
 import com.nova.backend.model.utente.Utente;
 import com.nova.backend.service.utente.AutenticazioneUtente;
 import com.nova.backend.service.utente.ServiceUtente;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,7 @@ public class UtenteController {
     }
 
     @PostMapping("/registrazione")
-    public Object registraUtente(@RequestBody RegistroUtenteDTO req) {
+    public Object registraUtente(@Valid @RequestBody RegistroUtenteDTO req) {
         return this.serviceUtente.registrazioneUtente(req);
     }
 
@@ -39,7 +40,7 @@ public class UtenteController {
     }
 
     @PostMapping("/login")
-    public Object login(@RequestBody LoginRequestDTO req) {
+    public Object login(@Valid @RequestBody LoginRequestDTO req) {
         return this.autenticazioneUtente.login(req);
     }
 

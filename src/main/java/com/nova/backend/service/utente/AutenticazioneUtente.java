@@ -3,6 +3,8 @@ package com.nova.backend.service.utente;
 import com.nova.backend.dto.RispostaErrore;
 import com.nova.backend.dto.RispostaGenerica;
 import com.nova.backend.dto.utente.request.LoginRequestDTO;
+import com.nova.backend.dto.utente.response.UserResponseDTO;
+import com.nova.backend.mapper.utente.UtenteMapper;
 import com.nova.backend.model.utente.SessioneUtente;
 import com.nova.backend.model.utente.Utente;
 import com.nova.backend.repository.utente.SessioneUtenteRepository;
@@ -11,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -55,9 +58,11 @@ public class AutenticazioneUtente {
         sessione.setRevoked(false);
         this.sessioneUtenteRepository.save(sessione);
 
-        Map<String, Object> payload = new java.util.HashMap<>();
-        utente.setPassword(null); // Non inviare la password criptata nel payload
-        payload.put("utente", utente);
+        // Converti l'entità in DTO per evitare di esporre/mutare l'oggetto JPA gestito
+        UserResponseDTO utenteDTO = UtenteMapper.toResponse(utente);
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("utente", utenteDTO);
         payload.put("token", token);
         payload.put("dataScadenza", sessione.getExpiresAt().toString());
 
@@ -92,15 +97,5 @@ public class AutenticazioneUtente {
         }
         return false;
     }
-
-    public Object controllaNonAutorizzato(String token, Long idUtente) {
-        if (token == null || idUtente == null) {
-            return new RispostaErrore("Token o idUtente mancanti", 400, System.currentTimeMillis());
-        }
-        boolean valido = this.isTokenValid(token, idUtente);
-        if (!valido) {
-            return new RispostaErrore("Token non valido", 401, System.currentTimeMillis());
-        }
-        return null;
-    }
 }
+
