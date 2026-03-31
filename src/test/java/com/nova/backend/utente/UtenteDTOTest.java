@@ -1,8 +1,8 @@
 package com.nova.backend.utente;
 
-import com.nova.backend.dto.utente.request.LoginRequestDTO;
-import com.nova.backend.dto.utente.request.RegistroUtenteDTO;
-import com.nova.backend.dto.utente.response.UserResponseDTO;
+import com.nova.backend.dto.utente.richiesta.LoginRequestDTO;
+import com.nova.backend.dto.utente.richiesta.RegistroUtenteDTO;
+import com.nova.backend.dto.utente.risposta.UserResponseDTO;
 import com.nova.backend.mapper.utente.UtenteMapper;
 import com.nova.backend.model.utente.Ruolo;
 import com.nova.backend.model.utente.Utente;

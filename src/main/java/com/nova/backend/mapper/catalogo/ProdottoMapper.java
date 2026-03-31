@@ -1,7 +1,7 @@
 package com.nova.backend.mapper.catalogo;
 
-import com.nova.backend.dto.catalogo.ProdottoRequestDTO;
-import com.nova.backend.dto.catalogo.ProdottoResponseDTO;
+import com.nova.backend.dto.catalogo.richiesta.ProdottoRequestDTO;
+import com.nova.backend.dto.catalogo.risposta.ProdottoResponseDTO;
 import com.nova.backend.dto.catalogo.ImmagineProdottoDTO;
 import com.nova.backend.dto.catalogo.SpecificaProdottoDTO;
 import com.nova.backend.model.catalogo.Prodotto;

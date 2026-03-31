@@ -1,7 +1,7 @@
 package com.nova.backend.assistenza;
 
-import com.nova.backend.dto.assistenza.response.MessaggioSupportoDTO;
-import com.nova.backend.dto.assistenza.response.TicketSupportoDTO;
+import com.nova.backend.dto.assistenza.risposta.MessaggioSupportoDTO;
+import com.nova.backend.dto.assistenza.risposta.TicketSupportoDTO;
 import com.nova.backend.mapper.assistenza.AssistenzaMapper;
 import com.nova.backend.model.assistenza.PrioritaTicket;
 import com.nova.backend.model.assistenza.StatoTicket;

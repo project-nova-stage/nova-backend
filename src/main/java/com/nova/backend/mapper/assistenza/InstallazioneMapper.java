@@ -1,7 +1,7 @@
 package com.nova.backend.mapper.assistenza;
 
-import com.nova.backend.dto.assistenza.InstallazioneRequest;
-import com.nova.backend.dto.assistenza.InstallazioneResponse;
+import com.nova.backend.dto.assistenza.richiesta.InstallazioneRequest;
+import com.nova.backend.dto.assistenza.risposta.InstallazioneResponse;
 import com.nova.backend.model.assistenza.Installazione;
 import com.nova.backend.model.assistenza.RichiestaServizio;
 import com.nova.backend.model.ordine.Ordine;

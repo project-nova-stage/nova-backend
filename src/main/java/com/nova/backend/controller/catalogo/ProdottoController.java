@@ -1,7 +1,7 @@
 package com.nova.backend.controller.catalogo;
 
-import com.nova.backend.dto.catalogo.ProdottoRequestDTO;
-import com.nova.backend.dto.catalogo.ProdottoResponseDTO;
+import com.nova.backend.dto.catalogo.richiesta.ProdottoRequestDTO;
+import com.nova.backend.dto.catalogo.risposta.ProdottoResponseDTO;
 import com.nova.backend.service.catalogo.ProdottoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

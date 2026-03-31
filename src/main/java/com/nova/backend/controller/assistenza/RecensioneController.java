@@ -1,7 +1,7 @@
 package com.nova.backend.controller.assistenza;
 
-import com.nova.backend.dto.assistenza.RecensioneRequest;
-import com.nova.backend.dto.assistenza.RecensioneResponse;
+import com.nova.backend.dto.assistenza.richiesta.RecensioneRequest;
+import com.nova.backend.dto.assistenza.risposta.RecensioneResponse;
 import com.nova.backend.service.assistenza.RecensioneService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

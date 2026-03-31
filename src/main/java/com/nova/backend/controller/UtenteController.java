@@ -1,9 +1,9 @@
 package com.nova.backend.controller;
 
 import com.nova.backend.dto.RispostaGenerica;
-import com.nova.backend.dto.utente.request.LoginRequestDTO;
-import com.nova.backend.dto.utente.request.RegistroUtenteDTO;
-import com.nova.backend.model.utente.Utente;
+import com.nova.backend.dto.utente.richiesta.LoginRequestDTO;
+import com.nova.backend.dto.utente.richiesta.RegistroUtenteDTO;
+import com.nova.backend.dto.utente.risposta.UserResponseDTO;
 import com.nova.backend.service.utente.AutenticazioneUtente;
 import com.nova.backend.service.utente.ServiceUtente;
 import jakarta.validation.Valid;
@@ -34,8 +34,8 @@ public class UtenteController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<Utente>> getTuttiGliUtenti() {
-        List<Utente> utenti = serviceUtente.findAllUsers();
+    public ResponseEntity<List<UserResponseDTO>> getTuttiGliUtenti() {
+        List<UserResponseDTO> utenti = serviceUtente.findAllUsers();
         if (utenti.isEmpty()) {
             return ResponseEntity.noContent().build();
         }

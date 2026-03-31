@@ -1,7 +1,7 @@
 package com.nova.backend.service.assistenza;
 
-import com.nova.backend.dto.assistenza.MessaggioSupportoRequest;
-import com.nova.backend.dto.assistenza.MessaggioSupportoResponse;
+import com.nova.backend.dto.assistenza.richiesta.MessaggioSupportoRequest;
+import com.nova.backend.dto.assistenza.risposta.MessaggioSupportoResponse;
 import com.nova.backend.mapper.assistenza.MessaggioSupportoMapper;
 import com.nova.backend.model.assistenza.MessaggioSupporto;
 import com.nova.backend.repository.assistenza.MessaggioSupportoRepository;
