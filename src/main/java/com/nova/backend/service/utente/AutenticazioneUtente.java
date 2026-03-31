@@ -1,11 +1,11 @@
 package com.nova.backend.service.utente;
 
-import com.nova.backend.DTO.ErrorResponse;
-import com.nova.backend.DTO.RequestLogin;
-import com.nova.backend.DTO.ResponseOBJ;
+import com.nova.backend.dto.RispostaErrore;
+import com.nova.backend.dto.RispostaGenerica;
+import com.nova.backend.dto.utente.request.LoginRequestDTO;
 import com.nova.backend.model.utente.SessioneUtente;
 import com.nova.backend.model.utente.Utente;
-import com.nova.backend.repository.SessioneUtenteRepository;
+import com.nova.backend.repository.utente.SessioneUtenteRepository;
 import com.nova.backend.repository.utente.UtenteRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,84 +28,79 @@ public class AutenticazioneUtente {
     }
 
     // LOGIN
-    public Object login(RequestLogin loginRequest) {
+    public Object login(LoginRequestDTO loginRequest) {
         Optional<Utente> userOpt = this.utenteRepository.findByEmail(loginRequest.getEmail());
 
-        if (!userOpt.isPresent())
-        {
-            return new ErrorResponse("Utente non trovato", 404, System.currentTimeMillis());
+        if (!userOpt.isPresent()) {
+            return new RispostaErrore("Utente non trovato", 404, System.currentTimeMillis());
         }
 
         Utente utente = userOpt.get();
 
-        if (utente.isEnabled() == false) {
-            return new ErrorResponse("Utente non attivo", 403, System.currentTimeMillis());
+        if (!utente.isEnabled()) {
+            return new RispostaErrore("Utente non attivo", 403, System.currentTimeMillis());
         }
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), utente.getPassword())) {
-            return new ErrorResponse("Password errata", 401, System.currentTimeMillis());
+            return new RispostaErrore("Password errata", 401, System.currentTimeMillis());
         }
 
         String token = java.util.UUID.randomUUID().toString();
 
-        SessioneUtente userSession = new SessioneUtente();
-        userSession.setIdUtente(utente);
-        userSession.setToken(token);
-        userSession.setCreatedAt(LocalDateTime.now());
-        userSession.setExpiresAt(LocalDateTime.now().plusHours(4)); // Sessione valida per 8 ore
-        userSession.setRevoked(false);
-        this.sessioneUtenteRepository.save(userSession);
+        SessioneUtente sessione = new SessioneUtente();
+        sessione.setIdUtente(utente);
+        sessione.setToken(token);
+        sessione.setCreatedAt(LocalDateTime.now());
+        sessione.setExpiresAt(LocalDateTime.now().plusHours(4));
+        sessione.setRevoked(false);
+        this.sessioneUtenteRepository.save(sessione);
+
         Map<String, Object> payload = new java.util.HashMap<>();
         utente.setPassword(null); // Non inviare la password criptata nel payload
         payload.put("utente", utente);
         payload.put("token", token);
-        payload.put("expiresAt", userSession.getExpiresAt().toString());
-
+        payload.put("dataScadenza", sessione.getExpiresAt().toString());
 
         return payload;
     }
 
-    public Object logout(String token, Long userId)
-    {
+    public Object logout(String token, Long idUtente) {
         Optional<SessioneUtente> sessionOpt = this.sessioneUtenteRepository.findByToken(token);
         if (sessionOpt.isPresent()) {
-            SessioneUtente session = sessionOpt.get();
-            if (session.getIdUtente().getId().equals(userId) && !session.getRevoked()) {
-                session.setRevoked(true);
-                this.sessioneUtenteRepository.save(session);
-                return new ResponseOBJ("logout effettuato con successo", null);
+            SessioneUtente sessione = sessionOpt.get();
+            if (sessione.getIdUtente().getId().equals(idUtente) && !sessione.getRevoked()) {
+                sessione.setRevoked(true);
+                this.sessioneUtenteRepository.save(sessione);
+                return new RispostaGenerica("Logout effettuato con successo", null);
             }
         }
-        return new ErrorResponse("logout fallito", 403, System.currentTimeMillis());
+        return new RispostaErrore("Logout fallito", 403, System.currentTimeMillis());
     }
 
-    public boolean isTokenValid(String token, Long userId) {
-        Optional<Utente> userOpt = this.utenteRepository.findById(userId);
-        if (!userOpt.isPresent())
-        {
+    public boolean isTokenValid(String token, Long idUtente) {
+        Optional<Utente> userOpt = this.utenteRepository.findById(idUtente);
+        if (!userOpt.isPresent()) {
             return false;
         }
         Optional<SessioneUtente> sessionOpt = this.sessioneUtenteRepository.findByToken(token);
         if (sessionOpt.isPresent()) {
-            SessioneUtente session = sessionOpt.get();
-            if (session.getIdUtente().getId().equals(userId) && !session.getRevoked()
-                    && session.getExpiresAt().isAfter(LocalDateTime.now())) {
+            SessioneUtente sessione = sessionOpt.get();
+            if (sessione.getIdUtente().getId().equals(idUtente) && !sessione.getRevoked()
+                    && sessione.getExpiresAt().isAfter(LocalDateTime.now())) {
                 return true;
             }
         }
         return false;
     }
 
-    public Object checkAuthError(String token, Long user_id) {
-        if (token==null || user_id==null) {
-            return new ErrorResponse("Token o user_id mancanti", 400, System.currentTimeMillis());
+    public Object controllaNonAutorizzato(String token, Long idUtente) {
+        if (token == null || idUtente == null) {
+            return new RispostaErrore("Token o idUtente mancanti", 400, System.currentTimeMillis());
         }
-        boolean valid = this.isTokenValid(token, user_id);
-        if (!valid) {
-            return new ErrorResponse("Token non valido", 401, System.currentTimeMillis());
+        boolean valido = this.isTokenValid(token, idUtente);
+        if (!valido) {
+            return new RispostaErrore("Token non valido", 401, System.currentTimeMillis());
         }
-
         return null;
     }
-
 }

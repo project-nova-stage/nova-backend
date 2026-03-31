@@ -1,11 +1,10 @@
 package com.nova.backend.controller;
 
-import com.nova.backend.DTO.RequestLogin;
-import com.nova.backend.DTO.RequestRegistrazione;
+import com.nova.backend.dto.utente.request.LoginRequestDTO;
+import com.nova.backend.dto.utente.request.RegistroUtenteDTO;
 import com.nova.backend.model.utente.Utente;
 import com.nova.backend.service.utente.AutenticazioneUtente;
 import com.nova.backend.service.utente.ServiceUtente;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +16,6 @@ import java.util.List;
 @RequestMapping("/utente")
 public class UtenteController {
 
-    //@Autowired
     private final ServiceUtente serviceUtente;
     private final AutenticazioneUtente autenticazioneUtente;
 
@@ -27,43 +25,34 @@ public class UtenteController {
     }
 
     @PostMapping("/registrazione")
-    public Object registerUser(@RequestBody RequestRegistrazione req)
-    {
-        System.out.println("Sto registrando un utente");
-        System.out.println("Registering utente: " + req.getNome() + " " + req.getCognome());
+    public Object registraUtente(@RequestBody RegistroUtenteDTO req) {
         return this.serviceUtente.registrazioneUtente(req);
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<Utente>> getAllUsers() {
-        List<Utente> users = serviceUtente.findAllUsers();
-
-        if (users.isEmpty()) {
+    public ResponseEntity<List<Utente>> getTuttiGliUtenti() {
+        List<Utente> utenti = serviceUtente.findAllUsers();
+        if (utenti.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(utenti);
     }
 
     @PostMapping("/login")
-    public Object login(@RequestBody RequestLogin req) {
-        System.out.println("Sto effettuando il login");
+    public Object login(@RequestBody LoginRequestDTO req) {
         return this.autenticazioneUtente.login(req);
     }
 
     @PostMapping("/logout")
     public Object logout(@RequestHeader("X-Auth-Token") String token, @RequestHeader("X-User-Id") Long idUtente) {
-        System.out.println("Sto effettuando il logout");
         return this.autenticazioneUtente.logout(token, idUtente);
     }
 
-
     @PostMapping("/validazioneToken")
-    public Object validateToken(@RequestHeader("X-Auth-Token") String token, @RequestHeader("X-User-Id") Long idUtente) {
-        HashMap<String, Object> response = new HashMap<>();
-        boolean isValid = this.autenticazioneUtente.isTokenValid(token, idUtente);
-        response.put("isValid", isValid);
-        return response;
+    public Object validaToken(@RequestHeader("X-Auth-Token") String token, @RequestHeader("X-User-Id") Long idUtente) {
+        HashMap<String, Object> risposta = new HashMap<>();
+        boolean valido = this.autenticazioneUtente.isTokenValid(token, idUtente);
+        risposta.put("tokenValido", valido);
+        return risposta;
     }
-
 }
