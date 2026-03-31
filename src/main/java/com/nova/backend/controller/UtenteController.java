@@ -1,16 +1,19 @@
 package com.nova.backend.controller;
 
+import com.nova.backend.dto.RispostaGenerica;
 import com.nova.backend.dto.utente.request.LoginRequestDTO;
 import com.nova.backend.dto.utente.request.RegistroUtenteDTO;
 import com.nova.backend.model.utente.Utente;
 import com.nova.backend.service.utente.AutenticazioneUtente;
 import com.nova.backend.service.utente.ServiceUtente;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -26,8 +29,8 @@ public class UtenteController {
     }
 
     @PostMapping("/registrazione")
-    public Object registraUtente(@Valid @RequestBody RegistroUtenteDTO req) {
-        return this.serviceUtente.registrazioneUtente(req);
+    public ResponseEntity<RispostaGenerica> registraUtente(@Valid @RequestBody RegistroUtenteDTO req) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.serviceUtente.registrazioneUtente(req));
     }
 
     @GetMapping("/getAll")
@@ -40,20 +43,20 @@ public class UtenteController {
     }
 
     @PostMapping("/login")
-    public Object login(@Valid @RequestBody LoginRequestDTO req) {
-        return this.autenticazioneUtente.login(req);
+    public ResponseEntity<Map<String, Object>> login(@Valid @RequestBody LoginRequestDTO req) {
+        return ResponseEntity.ok(this.autenticazioneUtente.login(req));
     }
 
     @PostMapping("/logout")
-    public Object logout(@RequestHeader("X-Auth-Token") String token, @RequestHeader("X-User-Id") Long idUtente) {
-        return this.autenticazioneUtente.logout(token, idUtente);
+    public ResponseEntity<RispostaGenerica> logout(@RequestHeader("X-Auth-Token") String token, @RequestHeader("X-User-Id") Long idUtente) {
+        return ResponseEntity.ok(this.autenticazioneUtente.logout(token, idUtente));
     }
 
     @PostMapping("/validazioneToken")
-    public Object validaToken(@RequestHeader("X-Auth-Token") String token, @RequestHeader("X-User-Id") Long idUtente) {
-        HashMap<String, Object> risposta = new HashMap<>();
-        boolean valido = this.autenticazioneUtente.isTokenValid(token, idUtente);
-        risposta.put("tokenValido", valido);
-        return risposta;
+    public ResponseEntity<Map<String, Object>> validaToken(@RequestHeader("X-Auth-Token") String token, @RequestHeader("X-User-Id") Long idUtente) {
+        Map<String, Object> risposta = new HashMap<>();
+        risposta.put("tokenValido", this.autenticazioneUtente.isTokenValid(token, idUtente));
+        return ResponseEntity.ok(risposta);
     }
 }
+

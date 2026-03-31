@@ -1,14 +1,15 @@
 package com.nova.backend.service.utente;
 
-import com.nova.backend.dto.RispostaErrore;
 import com.nova.backend.dto.RispostaGenerica;
 import com.nova.backend.dto.utente.request.LoginRequestDTO;
 import com.nova.backend.dto.utente.response.UserResponseDTO;
+import com.nova.backend.exception.EccezioneApplicativa;
 import com.nova.backend.mapper.utente.UtenteMapper;
 import com.nova.backend.model.utente.SessioneUtente;
 import com.nova.backend.model.utente.Utente;
 import com.nova.backend.repository.utente.SessioneUtenteRepository;
 import com.nova.backend.repository.utente.UtenteRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,21 +32,16 @@ public class AutenticazioneUtente {
     }
 
     // LOGIN
-    public Object login(LoginRequestDTO loginRequest) {
-        Optional<Utente> userOpt = this.utenteRepository.findByEmail(loginRequest.getEmail());
-
-        if (!userOpt.isPresent()) {
-            return new RispostaErrore("Utente non trovato", 404, System.currentTimeMillis());
-        }
-
-        Utente utente = userOpt.get();
+    public Map<String, Object> login(LoginRequestDTO loginRequest) {
+        Utente utente = this.utenteRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new EccezioneApplicativa("Utente non trovato", HttpStatus.NOT_FOUND));
 
         if (!utente.isEnabled()) {
-            return new RispostaErrore("Utente non attivo", 403, System.currentTimeMillis());
+            throw new EccezioneApplicativa("Utente non attivo", HttpStatus.FORBIDDEN);
         }
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), utente.getPassword())) {
-            return new RispostaErrore("Password errata", 401, System.currentTimeMillis());
+            throw new EccezioneApplicativa("Password errata", HttpStatus.UNAUTHORIZED);
         }
 
         String token = java.util.UUID.randomUUID().toString();
@@ -69,7 +65,7 @@ public class AutenticazioneUtente {
         return payload;
     }
 
-    public Object logout(String token, Long idUtente) {
+    public RispostaGenerica logout(String token, Long idUtente) {
         Optional<SessioneUtente> sessionOpt = this.sessioneUtenteRepository.findByToken(token);
         if (sessionOpt.isPresent()) {
             SessioneUtente sessione = sessionOpt.get();
@@ -79,7 +75,7 @@ public class AutenticazioneUtente {
                 return new RispostaGenerica("Logout effettuato con successo", null);
             }
         }
-        return new RispostaErrore("Logout fallito", 403, System.currentTimeMillis());
+        throw new EccezioneApplicativa("Token non valido o sessione non trovata", HttpStatus.UNAUTHORIZED);
     }
 
     public boolean isTokenValid(String token, Long idUtente) {

@@ -1,13 +1,14 @@
 package com.nova.backend.service.utente;
 
-import com.nova.backend.dto.RispostaErrore;
 import com.nova.backend.dto.RispostaGenerica;
 import com.nova.backend.dto.utente.request.RegistroUtenteDTO;
+import com.nova.backend.exception.EccezioneApplicativa;
 import com.nova.backend.model.utente.Ruolo;
 import com.nova.backend.model.utente.TipoCliente;
 import com.nova.backend.model.utente.Utente;
 import com.nova.backend.repository.utente.UtenteRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +26,10 @@ public class ServiceUtente {
     }
 
     // REGISTRAZIONE UTENTE
-    public Object registrazioneUtente(RegistroUtenteDTO req) {
+    public RispostaGenerica registrazioneUtente(RegistroUtenteDTO req) {
         // Verifica se l'utente esiste già tramite email
         if (this.utenteRepository.existsByEmail(req.getEmail())) {
-            return new RispostaErrore("Email già in uso", 409, System.currentTimeMillis());
+            throw new EccezioneApplicativa("Email già in uso", HttpStatus.CONFLICT);
         }
 
         Utente utente = new Utente();
@@ -41,7 +42,7 @@ public class ServiceUtente {
             if (ruoloValido(req.getCodiceRuolo())) {
                 utente.setRuolo(Ruolo.valueOf(req.getCodiceRuolo()));
             } else {
-                return new RispostaErrore("Ruolo inesistente", 400, System.currentTimeMillis());
+                throw new EccezioneApplicativa("Ruolo inesistente", HttpStatus.BAD_REQUEST);
             }
         } else {
             utente.setRuolo(Ruolo.CLIENTE);
@@ -50,12 +51,14 @@ public class ServiceUtente {
         // TipoCliente: applicabile solo al ruolo CLIENTE
         if (req.getTipoCliente() != null && !req.getTipoCliente().isBlank()) {
             if (utente.getRuolo() != Ruolo.CLIENTE) {
-                return new RispostaErrore("Il tipo cliente non è applicabile per il ruolo " + utente.getRuolo().name(), 400, System.currentTimeMillis());
+                throw new EccezioneApplicativa(
+                        "Il tipo cliente non è applicabile per il ruolo " + utente.getRuolo().name(),
+                        HttpStatus.BAD_REQUEST);
             }
             if (tipoValido(req.getTipoCliente())) {
                 utente.setTipoCliente(TipoCliente.valueOf(req.getTipoCliente()));
             } else {
-                return new RispostaErrore("Tipo cliente inesistente", 400, System.currentTimeMillis());
+                throw new EccezioneApplicativa("Tipo cliente inesistente", HttpStatus.BAD_REQUEST);
             }
         }
 
@@ -89,3 +92,4 @@ public class ServiceUtente {
         }
     }
 }
+
