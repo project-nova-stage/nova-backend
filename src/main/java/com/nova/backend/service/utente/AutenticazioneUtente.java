@@ -6,7 +6,7 @@ import com.nova.backend.DTO.ResponseOBJ;
 import com.nova.backend.model.utente.SessioneUtente;
 import com.nova.backend.model.utente.Utente;
 import com.nova.backend.repository.SessioneUtenteRepository;
-import com.nova.backend.repository.UtenteRepository;
+import com.nova.backend.repository.utente.UtenteRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

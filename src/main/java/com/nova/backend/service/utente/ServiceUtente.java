@@ -6,7 +6,7 @@ import com.nova.backend.DTO.ResponseOBJ;
 import com.nova.backend.model.utente.Ruolo;
 import com.nova.backend.model.utente.TipoCliente;
 import com.nova.backend.model.utente.Utente;
-import com.nova.backend.repository.UtenteRepository;
+import com.nova.backend.repository.utente.UtenteRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
