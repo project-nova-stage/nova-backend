@@ -1,8 +1,8 @@
 package com.nova.backend.mapper.iot;
 
-import com.nova.backend.dto.iot.response.DeviceLogDTO;
-import com.nova.backend.dto.iot.response.DeviceResponseDTO;
-import com.nova.backend.dto.iot.response.EnergyStatDTO;
+import com.nova.backend.dto.iot.risposta.DeviceLogDTO;
+import com.nova.backend.dto.iot.risposta.DeviceResponseDTO;
+import com.nova.backend.dto.iot.risposta.EnergyStatDTO;
 import com.nova.backend.model.iot.Dispositivo;
 import com.nova.backend.model.iot.LogDispositivo;
 import com.nova.backend.model.iot.StatisticaEnergia;

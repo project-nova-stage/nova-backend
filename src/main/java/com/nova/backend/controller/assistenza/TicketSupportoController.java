@@ -1,7 +1,7 @@
 package com.nova.backend.controller.assistenza;
 
-import com.nova.backend.dto.assistenza.TicketSupportoRequest;
-import com.nova.backend.dto.assistenza.TicketSupportoResponse;
+import com.nova.backend.dto.assistenza.richiesta.TicketSupportoRequest;
+import com.nova.backend.dto.assistenza.risposta.TicketSupportoResponse;
 import com.nova.backend.service.assistenza.TicketSupportoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

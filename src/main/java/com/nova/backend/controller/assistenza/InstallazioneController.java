@@ -1,7 +1,7 @@
 package com.nova.backend.controller.assistenza;
 
-import com.nova.backend.dto.assistenza.InstallazioneRequest;
-import com.nova.backend.dto.assistenza.InstallazioneResponse;
+import com.nova.backend.dto.assistenza.richiesta.InstallazioneRequest;
+import com.nova.backend.dto.assistenza.risposta.InstallazioneResponse;
 import com.nova.backend.model.assistenza.StatoInstallazione;
 import com.nova.backend.service.assistenza.InstallazioneService;
 import org.springframework.http.ResponseEntity;

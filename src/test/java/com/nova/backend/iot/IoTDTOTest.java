@@ -1,6 +1,6 @@
 package com.nova.backend.iot;
 
-import com.nova.backend.dto.iot.response.DeviceResponseDTO;
+import com.nova.backend.dto.iot.risposta.DeviceResponseDTO;
 import com.nova.backend.mapper.iot.IoTMapper;
 import com.nova.backend.model.iot.Dispositivo;
 import com.nova.backend.model.iot.StatoDispositivo;

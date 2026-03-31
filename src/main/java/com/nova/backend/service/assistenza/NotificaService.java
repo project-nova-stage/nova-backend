@@ -1,7 +1,7 @@
 package com.nova.backend.service.assistenza;
 
-import com.nova.backend.dto.assistenza.NotificaRequest;
-import com.nova.backend.dto.assistenza.NotificaResponse;
+import com.nova.backend.dto.assistenza.richiesta.NotificaRequest;
+import com.nova.backend.dto.assistenza.risposta.NotificaResponse;
 import com.nova.backend.mapper.assistenza.NotificaMapper;
 import com.nova.backend.model.assistenza.Notifica;
 import com.nova.backend.repository.assistenza.NotificaRepository;

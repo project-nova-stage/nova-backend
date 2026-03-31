@@ -1,8 +1,10 @@
 package com.nova.backend.service.utente;
 
 import com.nova.backend.dto.RispostaGenerica;
-import com.nova.backend.dto.utente.request.RegistroUtenteDTO;
+import com.nova.backend.dto.utente.richiesta.RegistroUtenteDTO;
+import com.nova.backend.dto.utente.risposta.UserResponseDTO;
 import com.nova.backend.exception.EccezioneApplicativa;
+import com.nova.backend.mapper.utente.UtenteMapper;
 import com.nova.backend.model.utente.Ruolo;
 import com.nova.backend.model.utente.TipoCliente;
 import com.nova.backend.model.utente.Utente;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -66,11 +69,13 @@ public class ServiceUtente {
         utente.setAttivo(true);
         Utente utenteSalvato = utenteRepository.save(utente);
 
-        return new RispostaGenerica("Utente registrato correttamente", utenteSalvato);
+        return new RispostaGenerica("Utente registrato correttamente", UtenteMapper.toResponse(utenteSalvato));
     }
 
-    public List<Utente> findAllUsers() {
-        return this.utenteRepository.findAll();
+    public List<UserResponseDTO> findAllUsers() {
+        return this.utenteRepository.findAll().stream()
+                .map(UtenteMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
     // Verifica se quello che viene inserito corrisponde all'enum

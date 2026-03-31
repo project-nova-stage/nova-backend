@@ -1,7 +1,7 @@
 package com.nova.backend.ordine;
 
-import com.nova.backend.dto.ordine.response.CartResponseDTO;
-import com.nova.backend.dto.ordine.response.OrderResponseDTO;
+import com.nova.backend.dto.ordine.risposta.CartResponseDTO;
+import com.nova.backend.dto.ordine.risposta.OrderResponseDTO;
 import com.nova.backend.mapper.ordine.OrdineMapper;
 import com.nova.backend.model.catalogo.Prodotto;
 import com.nova.backend.model.ordine.Carrello;

@@ -1,7 +1,7 @@
 package com.nova.backend.mapper.assistenza;
 
-import com.nova.backend.dto.assistenza.RecensioneRequest;
-import com.nova.backend.dto.assistenza.RecensioneResponse;
+import com.nova.backend.dto.assistenza.richiesta.RecensioneRequest;
+import com.nova.backend.dto.assistenza.risposta.RecensioneResponse;
 import com.nova.backend.model.assistenza.Recensione;
 import com.nova.backend.model.catalogo.Prodotto;
 import com.nova.backend.model.utente.Utente;

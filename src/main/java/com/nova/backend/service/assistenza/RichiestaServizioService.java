@@ -1,7 +1,7 @@
 package com.nova.backend.service.assistenza;
 
-import com.nova.backend.dto.assistenza.RichiestaServizioRequest;
-import com.nova.backend.dto.assistenza.RichiestaServizioResponse;
+import com.nova.backend.dto.assistenza.richiesta.RichiestaServizioRequest;
+import com.nova.backend.dto.assistenza.risposta.RichiestaServizioResponse;
 import com.nova.backend.mapper.assistenza.RichiestaServizioMapper;
 import com.nova.backend.model.assistenza.RichiestaServizio;
 import com.nova.backend.model.assistenza.StatoServizio;

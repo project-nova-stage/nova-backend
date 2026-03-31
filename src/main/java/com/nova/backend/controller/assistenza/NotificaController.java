@@ -1,7 +1,7 @@
 package com.nova.backend.controller.assistenza;
 
-import com.nova.backend.dto.assistenza.NotificaRequest;
-import com.nova.backend.dto.assistenza.NotificaResponse;
+import com.nova.backend.dto.assistenza.richiesta.NotificaRequest;
+import com.nova.backend.dto.assistenza.risposta.NotificaResponse;
 import com.nova.backend.service.assistenza.NotificaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

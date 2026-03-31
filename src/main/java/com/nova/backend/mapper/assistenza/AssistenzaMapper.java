@@ -1,8 +1,8 @@
 package com.nova.backend.mapper.assistenza;
 
-import com.nova.backend.dto.assistenza.response.MessaggioSupportoDTO;
-import com.nova.backend.dto.assistenza.response.RichiestaServizioDTO;
-import com.nova.backend.dto.assistenza.response.TicketSupportoDTO;
+import com.nova.backend.dto.assistenza.risposta.MessaggioSupportoDTO;
+import com.nova.backend.dto.assistenza.risposta.RichiestaServizioDTO;
+import com.nova.backend.dto.assistenza.risposta.TicketSupportoDTO;
 import com.nova.backend.model.assistenza.MessaggioSupporto;
 import com.nova.backend.model.assistenza.RichiestaServizio;
 import com.nova.backend.model.assistenza.TicketSupporto;

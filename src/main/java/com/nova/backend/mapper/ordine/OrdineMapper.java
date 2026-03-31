@@ -1,9 +1,9 @@
 package com.nova.backend.mapper.ordine;
 
-import com.nova.backend.dto.ordine.response.CartItemDTO;
-import com.nova.backend.dto.ordine.response.CartResponseDTO;
-import com.nova.backend.dto.ordine.response.OrderItemDTO;
-import com.nova.backend.dto.ordine.response.OrderResponseDTO;
+import com.nova.backend.dto.ordine.risposta.CartItemDTO;
+import com.nova.backend.dto.ordine.risposta.CartResponseDTO;
+import com.nova.backend.dto.ordine.risposta.OrderItemDTO;
+import com.nova.backend.dto.ordine.risposta.OrderResponseDTO;
 import com.nova.backend.model.ordine.Carrello;
 import com.nova.backend.model.ordine.CarrelloProdotto;
 import com.nova.backend.model.ordine.Ordine;

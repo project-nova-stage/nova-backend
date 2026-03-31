@@ -1,7 +1,7 @@
 package com.nova.backend.controller.assistenza;
 
-import com.nova.backend.dto.assistenza.MessaggioSupportoRequest;
-import com.nova.backend.dto.assistenza.MessaggioSupportoResponse;
+import com.nova.backend.dto.assistenza.richiesta.MessaggioSupportoRequest;
+import com.nova.backend.dto.assistenza.risposta.MessaggioSupportoResponse;
 import com.nova.backend.service.assistenza.MessaggioSupportoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
