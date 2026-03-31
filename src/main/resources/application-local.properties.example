@@ -1,3 +1,0 @@
-# Crea una copia di questo file e rinomina esattamente in application-local.properties
-spring.datasource.username=inserisci_qui_username_del_database
-spring.datasource.password=inserisci_qui_la_password_del_database
