@@ -1,9 +1,9 @@
 package com.nova.backend.model.assistenza;
 
 import com.nova.backend.model.utente.Utente;
-
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -17,6 +17,7 @@ import java.time.Instant;
 @Table(name = "notifications")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Notifica {
 
     @Id
@@ -41,8 +42,6 @@ public class Notifica {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant dataCreazione;
-
-    public Notifica() {}
 
     @Override
     public String toString() {

@@ -1,13 +1,12 @@
 package com.nova.backend.model.assistenza;
 
-import com.nova.backend.model.utente.Utente;
-
 import com.nova.backend.model.catalogo.Prodotto;
-
+import com.nova.backend.model.utente.Utente;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -19,11 +18,12 @@ import java.time.Instant;
  */
 @Entity
 @Table(
-    name = "reviews",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"})
+        name = "reviews",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"})
 )
 @Getter
 @Setter
+@NoArgsConstructor
 public class Recensione {
 
     @Id
@@ -39,7 +39,8 @@ public class Recensione {
     private Prodotto prodotto;
 
     // Punteggio da 1 a 5
-    @Min(1) @Max(5)
+    @Min(1)
+    @Max(5)
     @Column(name = "rating", nullable = false)
     private Integer valutazione;
 
@@ -49,8 +50,6 @@ public class Recensione {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant dataCreazione;
-
-    public Recensione() {}
 
     @Override
     public String toString() {
