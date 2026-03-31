@@ -6,11 +6,18 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository per la gestione delle recensioni sui prodotti.
+ */
 @Repository
 public interface RecensioneRepository extends JpaRepository<Recensione, Long> {
-    // Per calcolare la media voti e mostrare i commenti nella pagina del prodotto
+
+    /** Recupera tutte le recensioni di un prodotto. */
     List<Recensione> findByProdottoId(Long prodottoId);
 
-    // Per la dashboard dell'utente (le sue recensioni)
+    /** Per la dashboard dell'utente (le sue recensioni). */
     List<Recensione> findByUtenteId(Long utenteId);
+
+    /** Verifica se un utente ha già recensito un dato prodotto (una sola recensione per utente/prodotto). */
+    boolean existsByUtenteIdAndProdottoId(Long utenteId, Long prodottoId);
 }

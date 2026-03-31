@@ -7,14 +7,22 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repository per la gestione del catalogo prodotti.
+ * Sincronizzato con gli standard di Nova.
+ */
 @Repository
 public interface ProdottoRepository extends JpaRepository<Prodotto, Long> {
-    // Cerca un prodotto tramite il suo codice univoco
-    Optional<Prodotto> findBySku(String sku);
 
-    // Trova tutti i prodotti associati a una specifica categoria
+    /** Restituisce tutti i prodotti attivi. */
+    List<Prodotto> findByAttivoTrue();
+
+    /** Filtra i prodotti per categoria. */
     List<Prodotto> findByCategoriaId(Long categoriaId);
 
-    // Recupera solo i prodotti attualmente in vendita
-    List<Prodotto> findByAttivoTrue();
+    /** Cerca un prodotto tramite il suo codice univoco (SKU). */
+    Optional<Prodotto> findBySku(String sku);
+
+    /** Verifica esistenza per SKU, usato per prevenire duplicati. */
+    boolean existsBySku(String sku);
 }

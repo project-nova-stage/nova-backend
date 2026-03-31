@@ -5,12 +5,21 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
+/**
+ * Repository per la gestione delle categorie prodotto.
+ * Sincronizzato con gli standard di Nova.
+ */
 @Repository
 public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
-    // Utile per recuperare solo le categorie di primo livello (quelle senza padre)
+
+    /** Recupera le categorie radice (senza categoria padre). */
     List<Categoria> findByCategoriaPadreIsNull();
 
-    // Utile per la ricerca tramite URL (slug)
-    Categoria findBySlug(String slug);
+    /** Recupera le sottocategorie dirette di una categoria padre. */
+    List<Categoria> findByCategoriaPadreId(Long categoriaPadreId);
+
+    /** Recupera una categoria tramite il suo slug univoco. */
+    Optional<Categoria> findBySlug(String slug);
 }
