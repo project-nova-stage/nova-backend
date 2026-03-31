@@ -1,7 +1,7 @@
 package com.nova.backend.controller;
 
-import com.nova.backend.DTO.RequestLogin;
-import com.nova.backend.DTO.RequestRegistrazione;
+import com.nova.backend.dto.utente.request.LoginRequestDTO;
+import com.nova.backend.dto.utente.RequestRegistrazioneDTO;
 import com.nova.backend.model.utente.Utente;
 import com.nova.backend.service.utente.AutenticazioneUtente;
 import com.nova.backend.service.utente.ServiceUtente;
@@ -27,7 +27,7 @@ public class UtenteController {
     }
 
     @PostMapping("/registrazione")
-    public Object registerUser(@RequestBody RequestRegistrazione req)
+    public Object registerUser(@RequestBody RequestRegistrazioneDTO req)
     {
         System.out.println("Sto registrando un utente");
         System.out.println("Registering utente: " + req.getNome() + " " + req.getCognome());
@@ -46,7 +46,7 @@ public class UtenteController {
     }
 
     @PostMapping("/login")
-    public Object login(@RequestBody RequestLogin req) {
+    public Object login(@RequestBody LoginRequestDTO req) {
         System.out.println("Sto effettuando il login");
         return this.autenticazioneUtente.login(req);
     }

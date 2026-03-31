@@ -1,8 +1,8 @@
 package com.nova.backend.service.utente;
 
-import com.nova.backend.DTO.ErrorResponse;
-import com.nova.backend.DTO.RequestLogin;
-import com.nova.backend.DTO.ResponseOBJ;
+import com.nova.backend.dto.comune.ErrorResponseDTO;
+import com.nova.backend.dto.utente.request.LoginRequestDTO;
+import com.nova.backend.dto.comune.RispostaGenericaDTO;
 import com.nova.backend.model.utente.SessioneUtente;
 import com.nova.backend.model.utente.Utente;
 import com.nova.backend.repository.SessioneUtenteRepository;
@@ -28,22 +28,22 @@ public class AutenticazioneUtente {
     }
 
     // LOGIN
-    public Object login(RequestLogin loginRequest) {
+    public Object login(LoginRequestDTO loginRequest) {
         Optional<Utente> userOpt = this.utenteRepository.findByEmail(loginRequest.getEmail());
 
         if (!userOpt.isPresent())
         {
-            return new ErrorResponse("Utente non trovato", 404, System.currentTimeMillis());
+            return new ErrorResponseDTO("Utente non trovato", 404, System.currentTimeMillis());
         }
 
         Utente utente = userOpt.get();
 
         if (utente.isEnabled() == false) {
-            return new ErrorResponse("Utente non attivo", 403, System.currentTimeMillis());
+            return new ErrorResponseDTO("Utente non attivo", 403, System.currentTimeMillis());
         }
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), utente.getPassword())) {
-            return new ErrorResponse("Password errata", 401, System.currentTimeMillis());
+            return new ErrorResponseDTO("Password errata", 401, System.currentTimeMillis());
         }
 
         String token = java.util.UUID.randomUUID().toString();
@@ -73,10 +73,10 @@ public class AutenticazioneUtente {
             if (session.getIdUtente().getId().equals(userId) && !session.getRevoked()) {
                 session.setRevoked(true);
                 this.sessioneUtenteRepository.save(session);
-                return new ResponseOBJ("logout effettuato con successo", null);
+                return new RispostaGenericaDTO("logout effettuato con successo", null);
             }
         }
-        return new ErrorResponse("logout fallito", 403, System.currentTimeMillis());
+        return new ErrorResponseDTO("logout fallito", 403, System.currentTimeMillis());
     }
 
     public boolean isTokenValid(String token, Long userId) {
@@ -98,11 +98,11 @@ public class AutenticazioneUtente {
 
     public Object checkAuthError(String token, Long user_id) {
         if (token==null || user_id==null) {
-            return new ErrorResponse("Token o user_id mancanti", 400, System.currentTimeMillis());
+            return new ErrorResponseDTO("Token o user_id mancanti", 400, System.currentTimeMillis());
         }
         boolean valid = this.isTokenValid(token, user_id);
         if (!valid) {
-            return new ErrorResponse("Token non valido", 401, System.currentTimeMillis());
+            return new ErrorResponseDTO("Token non valido", 401, System.currentTimeMillis());
         }
 
         return null;

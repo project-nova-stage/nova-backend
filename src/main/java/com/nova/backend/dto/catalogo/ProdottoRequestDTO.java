@@ -14,6 +14,7 @@ public class ProdottoRequestDTO {
     private BigDecimal prezzo;
     private Integer quantitaDisponibile;
     private Boolean attivo;
+    private Long categoriaId;
     private List<ImmagineProdottoDTO> immagini;
     private List<SpecificaProdottoDTO> specifiche;
 }
