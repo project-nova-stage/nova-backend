@@ -20,15 +20,25 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
-=======
 HELP.md
 target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+.mvn/wrapper/maven-wrapper# IDE
+.idea/
+*.iml
+.vscode/
+
+# Build
+target/
+build/
+*.class
+
+# AI and Temp
+.gemini/
+build_final.txt
+build_output*.txt
+git_log_temp.txt
+
+# Local Properties (Sensitive)
 src/main/resources/application-local.properties
 
 ### STS ###
