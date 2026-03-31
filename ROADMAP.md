@@ -47,28 +47,30 @@ Ticketing e servizi d'installazione sul campo.
 
 ## 🟡 FASE 2 — Livello Dati (Repository Base)
 Query JPA per estrarre e manipolare le entità prodotte finora.
-- **[Fatto]** `UserRepository`
-- **[Fatto]** `CategoryRepository`, `ProductRepository`
-- **[Fatto]** `CartRepository`, `OrderRepository`
-- **[Fatto]** Livello Data per IoT (`DeviceRepository`, `AutomationRepository`) e Supporto (`SupportTicketRepository`...)
+- **[Fatto]** `UtenteRepository` (modulo utente).
+- **[Fatto]** `CategoriaRepository`, `ProdottoRepository` (modulo catalogo).
+- **[Fatto]** `CarrelloRepository`, `OrdineRepository` (modulo ordine).
+- **[Fatto]** `DispositivoRepository`, `AutomazioneRepository`, `LogDispositivoRepository`, `StatisticaEnergiaRepository` (modulo iot).
+- **[Fatto]** `TicketSupportoRepository`, `RichiestaServizioRepository`, `RecensioneRepository` (modulo assistenza).
 
 ---
 
 ## 🟠 FASE 3 — Scambio Dati (DTO & Mapper)
 Disaccoppiamento totale dal database e sanificazione con @Valid.
-- **[In sviluppo]** DTO per Auth (`RegisterRequest`, `LoginRequest`).
-- **[In sviluppo]** DTO per Catalogo (`ProductRequest`, `ProductResponse`).
-- **[In sviluppo]** DTO per Checkout (`CartResponse`, `OrderRequest`, `OrderResponse`).
-- **[In sviluppo]** Istanziamento dei vari Mapper (`UserMapper`, `ProductMapper`...).
+- **[Fatto]** DTO per Auth (`RegistroUtenteDTO`, `LoginRequestDTO`).
+- **[Fatto]** DTO per Catalogo (`ProductRequestDTO`, `ProductResponseDTO`, `CategoriaDTO`).
+- **[Fatto]** DTO per Checkout (`CartItemDTO`, `CartResponseDTO`, `OrderRequestDTO`, `OrderResponseDTO`, `OrderItemDTO`).
+- **[Fatto]** DTO per IoT e Assistenza (`DeviceResponseDTO`, `DeviceLogDTO`, `EnergyStatDTO`, `TicketSupportoDTO`, `MessaggioSupportoDTO`, `RichiestaServizioDTO`, `TicketRequestDTO`, `RichiestaServizioRequestDTO`).
+- **[Fatto]** Istanziamento e validazione dei Mapper (`UtenteMapper`, `CatalogoMapper`, `OrdineMapper`, `IoTMapper`, `AssistenzaMapper`).
 
 ---
 
-## 🔴 FASE 4 — Logica Applicativa (Service Layer)
+## 🔴 FASE 4 — Logica Applicativa (Service Layer) — [IN CORSO 🏗️]
 Cervello del sistema (`@Transactional`), eccezioni e regole di business.
-- **[Da fare]** `UserService` (registrazione sicura via BCrypt, ruoli).
-- **[Da fare]** `ProductService`, `CategoryService`.
-- **[Da fare]** `CartService` (gestione carrello utente), `OrderService` (evasione checkout).
-- **[Da fare]** `DeviceService` per il poller e messaggistica MQTT/REST.
+- **[In Corso]** `UserService` (registrazione sicura via BCrypt, ruoli).
+- **[Prossimamente]** `ProductService`, `CategoryService`.
+- **[Prossimamente]** `CartService` (gestione carrello utente), `OrderService` (evasione checkout).
+- **[Prossimamente]** `DeviceService` per il poller e messaggistica MQTT/REST.
 
 ---
 

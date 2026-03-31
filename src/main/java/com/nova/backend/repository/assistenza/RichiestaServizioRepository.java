@@ -6,8 +6,15 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository per la gestione delle richieste di sopralluogo e preventivo.
+ */
 @Repository
 public interface RichiestaServizioRepository extends JpaRepository<RichiestaServizio, Long> {
-    // Trova tutte le richieste fatte da un utente specifico
+
+    /** Recupera tutte le richieste inviate da un utente. */
+    List<RichiestaServizio> findByUtenteIdOrderByDataCreazioneDesc(Long utenteId);
+
+    /** Trova tutte le richieste fatte da un utente specifico. */
     List<RichiestaServizio> findByUtenteId(Long utenteId);
 }

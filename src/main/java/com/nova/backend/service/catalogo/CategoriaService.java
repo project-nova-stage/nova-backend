@@ -1,16 +1,20 @@
 package com.nova.backend.service.catalogo;
 
-import com.nova.backend.dto.catalogo.CategoriaRequest;
-import com.nova.backend.dto.catalogo.CategoriaResponse;
+import com.nova.backend.dto.catalogo.CategoriaDTO;
 import com.nova.backend.mapper.catalogo.CategoriaMapper;
 import com.nova.backend.model.catalogo.Categoria;
 import com.nova.backend.repository.catalogo.CategoriaRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Servizio per la gestione delle categorie dei prodotti.
+ */
 @Service
+@Transactional
 public class CategoriaService {
 
     private final CategoriaRepository repository;
@@ -21,18 +25,53 @@ public class CategoriaService {
         this.mapper = mapper;
     }
 
-    public CategoriaResponse creaCategoria(CategoriaRequest request) {
-        Categoria categoria = mapper.toEntity(request);
-        return mapper.toResponse(repository.save(categoria));
+    /**
+     * Crea una nuova categoria.
+     */
+    public CategoriaDTO creaCategoria(CategoriaDTO dto) {
+        Categoria categoria = mapper.toEntity(dto);
+        Categoria salvata = repository.save(categoria);
+        return mapper.toResponse(salvata);
     }
 
-    public List<CategoriaResponse> ottieniTutte() {
+    /**
+     * Ottiene tutte le categorie.
+     */
+    public List<CategoriaDTO> ottieniTutte() {
         return repository.findAll().stream()
-                .map(mapper::toResponse).collect(Collectors.toList());
+                .map(mapper::toResponse)
+                .collect(Collectors.toList());
     }
 
-    public List<CategoriaResponse> ottieniCategoriePrincipali() {
-        return repository.findByCategoriaPadreIsNull().stream()
-                .map(mapper::toResponse).collect(Collectors.toList());
+    /**
+     * Ottiene una categoria per ID.
+     */
+    public CategoriaDTO ottieniPerId(Long id) {
+        return repository.findById(id)
+                .map(mapper::toResponse)
+                .orElseThrow(() -> new RuntimeException("Categoria non trovata con ID: " + id));
+    }
+
+    /**
+     * Aggiorna una categoria esistente.
+     */
+    public CategoriaDTO aggiornaCategoria(Long id, CategoriaDTO dto) {
+        Categoria esistente = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Categoria non trovata con ID: " + id));
+
+        esistente.setNome(dto.getNome());
+
+        Categoria aggiornata = repository.save(esistente);
+        return mapper.toResponse(aggiornata);
+    }
+
+    /**
+     * Elimina una categoria.
+     */
+    public void eliminaCategoria(Long id) {
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Categoria non trovata con ID: " + id);
+        }
+        repository.deleteById(id);
     }
 }

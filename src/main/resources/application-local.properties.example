@@ -1,0 +1,19 @@
+# ============================================================
+# GUIDA: Copia questo file e rinominalo in:
+#        application-local.properties
+# NON committare il file rinominato su Git (è nel .gitignore).
+# ============================================================
+
+# === CREDENZIALI DATABASE (Neon.tech) ===
+# Inserisci qui le tue credenziali personali del database Neon.
+spring.datasource.username=inserisci_qui_username_del_database
+spring.datasource.password=inserisci_qui_la_password_del_database
+
+# === (OPZIONALE) Override per sviluppo locale ===
+# Decommenta per abilitare i log SQL in fase di debug
+# spring.jpa.show-sql=true
+# spring.jpa.properties.hibernate.format_sql=true
+
+# === (OPZIONALE) Override DDL ===
+# Decommenta per resettare lo schema ad ogni avvio (ATTENZIONE: cancella i dati)
+# spring.jpa.hibernate.ddl-auto=create-drop

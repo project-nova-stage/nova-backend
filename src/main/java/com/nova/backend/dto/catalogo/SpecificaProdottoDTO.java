@@ -1,8 +1,13 @@
 package com.nova.backend.dto.catalogo;
 
-public record SpecificaProdottoDTO(
-        Long id, // Opzionale per nuove specifiche, necessario per aggiornamenti
-        String label,
-        String value
-) {
+import lombok.Data;
+
+/**
+ * DTO per le specifiche tecniche dei prodotti (es. "CPU", "RAM", "Autonomia").
+ */
+@Data
+public class SpecificaProdottoDTO {
+    private Long id;
+    private String chiave;
+    private String valore;
 }

@@ -8,13 +8,21 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repository per la gestione degli ordini.
+ */
 @Repository
 public interface OrdineRepository extends JpaRepository<Ordine, Long> {
 
+    /** Restituisce tutti gli ordini di un utente, ordinati per data decrescente. */
+    List<Ordine> findByUtenteIdOrderByDataOrdineDesc(Long utenteId);
+
+    /** Recupera un ordine tramite il numero d'ordine univoco (es. ORD-2026-001). */
     Optional<Ordine> findByNumeroOrdine(String numeroOrdine);
 
-    List<Ordine> findByUtenteId(Long utenteId);
-
+    /** Filtra gli ordini per stato (es. tutti quelli in lavorazione). */
     List<Ordine> findByStato(StatoOrdine stato);
 
+    /** Restituisce tutti gli ordini appartententi a un utente, senza ordinamento di default. */
+    List<Ordine> findByUtenteId(Long utenteId);
 }
