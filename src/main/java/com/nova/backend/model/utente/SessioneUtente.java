@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "session")
+@Table(name = "sessions")
 @Getter
 @Setter
 public class SessioneUtente {
@@ -16,8 +16,8 @@ public class SessioneUtente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name="user_id", nullable=true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private Utente idUtente;
 
     @Column(name="token", nullable=false, length=255, unique=true)

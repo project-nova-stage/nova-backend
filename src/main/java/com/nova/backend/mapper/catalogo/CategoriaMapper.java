@@ -15,7 +15,16 @@ public class CategoriaMapper {
 
         Categoria entity = new Categoria();
         entity.setNome(dto.getNome());
-        
+
+        // Genera uno slug user-friendly a partire dal nome
+        if (dto.getNome() != null) {
+            String slug = dto.getNome().toLowerCase()
+                    .replaceAll("[^a-z0-9\\s-]", "")
+                    .replaceAll("\\s+", "-")
+                    .replaceAll("-+", "-");
+            entity.setSlug(slug);
+        }
+
         return entity;
     }
 
@@ -25,7 +34,7 @@ public class CategoriaMapper {
         CategoriaDTO dto = new CategoriaDTO();
         dto.setId(entity.getId());
         dto.setNome(entity.getNome());
-        
+
         return dto;
     }
 }

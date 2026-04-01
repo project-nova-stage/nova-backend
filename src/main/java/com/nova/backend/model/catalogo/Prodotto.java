@@ -34,6 +34,9 @@ public class Prodotto {
     @Column(name = "name", nullable = false, length = 100)
     private String nome;
 
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String descrizione;
+
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal prezzo;
 
@@ -100,6 +103,7 @@ public class Prodotto {
                 "id=" + id +
                 ", sku='" + sku + '\'' +
                 ", nome='" + nome + '\'' +
+                ", descrizione='" + descrizione + '\'' +
                 ", prezzo=" + prezzo +
                 ", quantitaDisponibile=" + quantitaDisponibile +
                 ", attivo=" + attivo +

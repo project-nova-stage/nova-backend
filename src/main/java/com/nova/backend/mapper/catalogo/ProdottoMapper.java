@@ -9,7 +9,6 @@ import com.nova.backend.model.catalogo.ImmagineProdotto;
 import com.nova.backend.model.catalogo.SpecificaProdotto;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
@@ -26,6 +25,7 @@ public class ProdottoMapper {
         Prodotto entity = new Prodotto();
         entity.setSku(dto.getSku());
         entity.setNome(dto.getNome());
+        entity.setDescrizione(dto.getDescrizione());
         entity.setPrezzo(dto.getPrezzo());
         entity.setQuantitaDisponibile(dto.getQuantitaDisponibile());
         entity.setAttivo(dto.getAttivo() != null ? dto.getAttivo() : true);
@@ -62,6 +62,7 @@ public class ProdottoMapper {
         dto.setId(entity.getId());
         dto.setSku(entity.getSku());
         dto.setNome(entity.getNome());
+        dto.setDescrizione(entity.getDescrizione());
         dto.setPrezzo(entity.getPrezzo());
         dto.setQuantitaDisponibile(entity.getQuantitaDisponibile());
         dto.setAttivo(entity.getAttivo());
