@@ -6,6 +6,7 @@ import com.nova.backend.dto.utente.richiesta.LoginRequestDTO;
 import com.nova.backend.dto.utente.risposta.UserResponseDTO;
 import com.nova.backend.exception.EccezioneApplicativa;
 import com.nova.backend.mapper.utente.UtenteMapper;
+import com.nova.backend.model.utente.Ruolo;
 import com.nova.backend.model.utente.SessioneUtente;
 import com.nova.backend.model.utente.Utente;
 import com.nova.backend.repository.utente.SessioneUtenteRepository;
@@ -108,6 +109,24 @@ public class AutenticazioneUtente {
 
         return null;
     }
+
+
+    //VERIFICA SE è UN ADMIN
+    public Object checkAdminError(Long user_id) {
+        Optional<Utente> userOpt = this.utenteRepository.findById(user_id);
+        if (!userOpt.isPresent()) {
+            return new RispostaErrore("User non trovato", 400, System.currentTimeMillis());
+        }
+        Ruolo ruolo = userOpt.get().getRuolo();
+        if(ruolo.equals(Ruolo.ADMIN)) {
+            System.out.println("55");
+            return null;
+        }else{
+            System.out.println("60");
+            return new RispostaErrore("Non autorizato", 404, System.currentTimeMillis());
+        }
+    }
+
 
 }
 

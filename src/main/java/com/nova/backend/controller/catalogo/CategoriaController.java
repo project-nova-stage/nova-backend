@@ -31,14 +31,20 @@ public class CategoriaController {
      */
     @PostMapping
     public ResponseEntity<CategoriaDTO> creaCategoria(@RequestHeader("X-Auth-Token") String token, @RequestHeader("X-User-Id") Long user_id, @Valid @RequestBody CategoriaDTO request) {
-        Object err = this.autenticazioneUtente.checkAuthError(token, user_id);
-        CategoriaDTO response = null;
-        if (err == null) {
-            response = service.creaCategoria(request);
-        }else{
-            return null;
-        }
-
+        //Verifica se il token dell'utente è valido o meno
+        Object authErr = this.autenticazioneUtente.checkAuthError(token, user_id);
+        CategoriaDTO response;
+        if (authErr == null) {
+            //Verifica se l'utente è un admin
+            Object authCheck = this.autenticazioneUtente.checkAdminError(user_id);
+            if (authCheck == null) {
+                response = service.creaCategoria(request);
+                } else {
+                    return null;
+                }
+             }else{
+                return null;
+            }
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -63,10 +69,17 @@ public class CategoriaController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<CategoriaDTO> aggiornaCategoria(@RequestHeader("X-Auth-Token") String token, @RequestHeader("X-User-Id") Long user_id, @PathVariable Long id, @RequestBody CategoriaDTO request) {
-        Object err = this.autenticazioneUtente.checkAuthError(token, user_id);
-        if(err == null){
-            return ResponseEntity.ok(service.aggiornaCategoria(id, request));
-        }else{
+        //Verifica se il token dell'utente è valido o meno
+        Object authErr = this.autenticazioneUtente.checkAuthError(token, user_id);
+        if(authErr == null) {
+            //Verifica se l'utente è un admin
+            Object authCheck = this.autenticazioneUtente.checkAdminError(user_id);
+            if (authCheck == null) {
+                return ResponseEntity.ok(service.aggiornaCategoria(id, request));
+            } else {
+                return null;
+            }
+        }else {
             return null;
         }
 
@@ -77,10 +90,17 @@ public class CategoriaController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminaCategoria(@RequestHeader("X-Auth-Token") String token, @RequestHeader("X-User-Id") Long user_id, @PathVariable Long id) {
-        Object err = this.autenticazioneUtente.checkAuthError(token, user_id);
-        if(err == null){
-            service.eliminaCategoria(id);
-        }else{
+        //Verifica se il token dell'utente è valido o meno
+        Object authErr = this.autenticazioneUtente.checkAuthError(token, user_id);
+        if(authErr == null){
+            //Verifica se l'utente è un admin
+            Object authCheck = this.autenticazioneUtente.checkAdminError(user_id);
+            if (authCheck == null) {
+                service.eliminaCategoria(id);
+            } else {
+                return null;
+            }
+        }else {
             return null;
         }
         return ResponseEntity.noContent().build();
