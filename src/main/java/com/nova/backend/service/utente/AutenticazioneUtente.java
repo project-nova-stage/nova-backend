@@ -1,5 +1,6 @@
 package com.nova.backend.service.utente;
 
+import com.nova.backend.dto.RispostaErrore;
 import com.nova.backend.dto.RispostaGenerica;
 import com.nova.backend.dto.utente.richiesta.LoginRequestDTO;
 import com.nova.backend.dto.utente.risposta.UserResponseDTO;
@@ -12,6 +13,7 @@ import com.nova.backend.repository.utente.UtenteRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.ErrorResponse;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -93,5 +95,19 @@ public class AutenticazioneUtente {
         }
         return false;
     }
+
+
+    public Object checkAuthError(String token, Long user_id) {
+        if (token == null || user_id == null) {
+            return new RispostaErrore("Token o user_id mancanti", 400, System.currentTimeMillis());
+        }
+        boolean valid = this.isTokenValid(token, user_id);
+        if (!valid) {
+            return new RispostaErrore("Token non valido", 401, System.currentTimeMillis());
+        }
+
+        return null;
+    }
+
 }
 
