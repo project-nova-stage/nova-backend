@@ -1,5 +1,6 @@
 package com.nova.backend.service.ordine;
 
+import com.nova.backend.dto.RispostaErrore;
 import com.nova.backend.dto.ordine.OrdineDTO;
 import com.nova.backend.model.ordine.Ordine;
 import com.nova.backend.model.ordine.StatoOrdine;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.nova.backend.dto.RispostaErrore;
 import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrdineServiceImpl implements OrdineService {
@@ -98,6 +100,12 @@ public class OrdineServiceImpl implements OrdineService {
         return OrdineDTO.fromEntity(aggiornato);
     }
 
+    /**
+     * Delete the order identified by the given id.
+     *
+     * @param id the identifier of the order to delete
+     * @throws IllegalArgumentException if no order exists with the specified id
+     */
     @Override
     public void eliminaOrdine(Long id) {
         if (!ordineRepository.existsById(id)) {
