@@ -23,7 +23,12 @@ public interface OrdineRepository extends JpaRepository<Ordine, Long> {
     /** Filtra gli ordini per stato (es. tutti quelli in lavorazione). */
     List<Ordine> findByStato(StatoOrdine stato);
 
-    /** Restituisce tutti gli ordini appartententi a un utente, senza ordinamento di default. */
+    /**
+ * Retrieve all orders belonging to the specified user without applying a default sort.
+ *
+ * @param utenteId the identifier of the user whose orders are requested
+ * @return a list of orders for the specified user; an empty list if the user has no orders
+ */
     List<Ordine> findByUtenteId(Long utenteId);
 
 

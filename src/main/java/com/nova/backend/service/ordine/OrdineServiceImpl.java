@@ -98,6 +98,12 @@ public class OrdineServiceImpl implements OrdineService {
         return OrdineDTO.fromEntity(aggiornato);
     }
 
+    /**
+     * Delete the order identified by the given id.
+     *
+     * @param id the identifier of the order to delete
+     * @throws IllegalArgumentException if no order exists with the specified id
+     */
     @Override
     public void eliminaOrdine(Long id) {
         if (!ordineRepository.existsById(id)) {
@@ -107,7 +113,13 @@ public class OrdineServiceImpl implements OrdineService {
     }
 
 
-    //VERIFICA SE L'ORDINE APPARTIENE ALL'UTENTE
+    /**
+     * Checks whether the specified order belongs to the specified user.
+     *
+     * @param user_id   the ID of the user to verify ownership for
+     * @param ordine_id the ID of the order to check
+     * @return `null` if the order belongs to the user, otherwise a `RispostaErrore` with message "Non autorizato", status 405, and the current system timestamp
+     */
     public Object verificaAppartenenza(Long user_id, Long ordine_id) {
         Optional<Ordine> ordine = ordineRepository.findById(ordine_id);
         Ordine ordineOpt = ordine.get();

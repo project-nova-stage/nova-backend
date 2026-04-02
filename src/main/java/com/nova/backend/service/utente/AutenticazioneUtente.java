@@ -111,7 +111,12 @@ public class AutenticazioneUtente {
     }
 
 
-    //VERIFICA SE è UN ADMIN
+    /**
+     * Verifies whether the user identified by the given id has the ADMIN role.
+     *
+     * @param user_id the id of the user to check
+     * @return `null` if the user exists and has role `Ruolo.ADMIN`; a `RispostaErrore` with message "User non trovato" and status 400 if the user does not exist; a `RispostaErrore` with message "Non autorizzato" and status 404 if the user exists but does not have the ADMIN role
+     */
     public Object checkAdminError(Long user_id) {
         Optional<Utente> userOpt = this.utenteRepository.findById(user_id);
         if (!userOpt.isPresent()) {
@@ -127,7 +132,15 @@ public class AutenticazioneUtente {
         }
     }
 
-    //VERIFICA SE è UN CLIENTE
+    /**
+     * Checks whether the user identified by `user_id` has the `CLIENTE` role and returns an authorization error when not.
+     *
+     * If the user is not found, returns a `RispostaErrore` indicating the user was not found (message "User non trovato", status 400).
+     * If the user exists but does not have the `CLIENTE` role, returns a `RispostaErrore` indicating lack of authorization (message "Non autorizzato", status 404).
+     *
+     * @param user_id the identifier of the user to check
+     * @return `null` if the user exists and has role `Ruolo.CLIENTE`; otherwise a `RispostaErrore` describing the failure
+     */
     public Object checkClienteError(Long user_id) {
         Optional<Utente> userOpt = this.utenteRepository.findById(user_id);
         if (!userOpt.isPresent()) {
