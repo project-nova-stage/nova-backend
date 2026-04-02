@@ -1,5 +1,6 @@
 package com.nova.backend.service.ordine;
 
+import com.nova.backend.dto.RispostaErrore;
 import com.nova.backend.dto.ordine.OrdineDTO;
 import com.nova.backend.model.ordine.Ordine;
 import com.nova.backend.model.ordine.StatoOrdine;
@@ -9,6 +10,7 @@ import com.nova.backend.repository.utente.UtenteRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrdineServiceImpl implements OrdineService {
@@ -96,6 +98,12 @@ public class OrdineServiceImpl implements OrdineService {
         return OrdineDTO.fromEntity(aggiornato);
     }
 
+    /**
+     * Delete the order identified by the given id.
+     *
+     * @param id the identifier of the order to delete
+     * @throws IllegalArgumentException if no order exists with the specified id
+     */
     @Override
     public void eliminaOrdine(Long id) {
         if (!ordineRepository.existsById(id)) {
@@ -103,5 +111,26 @@ public class OrdineServiceImpl implements OrdineService {
         }
         ordineRepository.deleteById(id);
     }
+
+
+    /**
+     * Checks whether the specified order belongs to the specified user.
+     *
+     * @param user_id   the ID of the user to verify ownership for
+     * @param ordine_id the ID of the order to check
+     * @return `null` if the order belongs to the user, otherwise a `RispostaErrore` with message "Non autorizato", status 405, and the current system timestamp
+     */
+    public Object verificaAppartenenza(Long user_id, Long ordine_id) {
+        Optional<Ordine> ordine = ordineRepository.findById(ordine_id);
+        Ordine ordineOpt = ordine.get();
+
+        if(ordineOpt.getUtente().getId().equals(user_id)) {
+            return null;
+        }
+        return new RispostaErrore("Non autorizato", 405, System.currentTimeMillis());
+    }
+
+
+
 }
 
