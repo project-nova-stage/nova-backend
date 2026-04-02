@@ -90,6 +90,7 @@ public class OrdineController {
         }
 
         return ResponseEntity.ok(ordineService.getAllOrdini());
+    }
     /**
      * Updates the order identified by the given id with the provided data.
      *
@@ -124,8 +125,6 @@ public class OrdineController {
 
         OrdineDTO aggiornato = ordineService.aggiornaOrdine(id, ordineDTO);
         return ResponseEntity.ok(aggiornato);
-    }
-
     }
     /**
      * Deletes the order identified by the given id, after validating the user's auth token and client role.
