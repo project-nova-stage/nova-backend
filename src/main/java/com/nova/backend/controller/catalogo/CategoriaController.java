@@ -2,6 +2,7 @@ package com.nova.backend.controller.catalogo;
 
 import com.nova.backend.dto.catalogo.CategoriaDTO;
 import com.nova.backend.service.catalogo.CategoriaService;
+import com.nova.backend.service.utente.AutenticazioneUtente;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,17 +19,32 @@ import java.util.List;
 public class CategoriaController {
 
     private final CategoriaService service;
+    private final AutenticazioneUtente autenticazioneUtente;
 
-    public CategoriaController(CategoriaService service) {
+    public CategoriaController(CategoriaService service, AutenticazioneUtente autenticazioneUtente) {
         this.service = service;
+        this.autenticazioneUtente = autenticazioneUtente;
     }
 
     /**
      * Crea una nuova categoria.
      */
     @PostMapping
-    public ResponseEntity<CategoriaDTO> creaCategoria(@Valid @RequestBody CategoriaDTO request) {
-        CategoriaDTO response = service.creaCategoria(request);
+    public ResponseEntity<CategoriaDTO> creaCategoria(@RequestHeader("X-Auth-Token") String token, @RequestHeader("X-User-Id") Long user_id, @Valid @RequestBody CategoriaDTO request) {
+        //Verifica se il token dell'utente è valido o meno
+        Object authErr = this.autenticazioneUtente.checkAuthError(token, user_id);
+        CategoriaDTO response;
+        if (authErr == null) {
+            //Verifica se l'utente è un admin
+            Object authCheck = this.autenticazioneUtente.checkAdminError(user_id);
+            if (authCheck == null) {
+                response = service.creaCategoria(request);
+                } else {
+                    return null;
+                }
+             }else{
+                return null;
+            }
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -52,16 +68,41 @@ public class CategoriaController {
      * Aggiorna una categoria esistente.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<CategoriaDTO> aggiornaCategoria(@PathVariable Long id, @RequestBody CategoriaDTO request) {
-        return ResponseEntity.ok(service.aggiornaCategoria(id, request));
+    public ResponseEntity<CategoriaDTO> aggiornaCategoria(@RequestHeader("X-Auth-Token") String token, @RequestHeader("X-User-Id") Long user_id, @PathVariable Long id, @RequestBody CategoriaDTO request) {
+        //Verifica se il token dell'utente è valido o meno
+        Object authErr = this.autenticazioneUtente.checkAuthError(token, user_id);
+        if(authErr == null) {
+            //Verifica se l'utente è un admin
+            Object authCheck = this.autenticazioneUtente.checkAdminError(user_id);
+            if (authCheck == null) {
+                return ResponseEntity.ok(service.aggiornaCategoria(id, request));
+            } else {
+                return null;
+            }
+        }else {
+            return null;
+        }
+
     }
 
     /**
      * Elimina una categoria.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminaCategoria(@PathVariable Long id) {
-        service.eliminaCategoria(id);
+    public ResponseEntity<Void> eliminaCategoria(@RequestHeader("X-Auth-Token") String token, @RequestHeader("X-User-Id") Long user_id, @PathVariable Long id) {
+        //Verifica se il token dell'utente è valido o meno
+        Object authErr = this.autenticazioneUtente.checkAuthError(token, user_id);
+        if(authErr == null){
+            //Verifica se l'utente è un admin
+            Object authCheck = this.autenticazioneUtente.checkAdminError(user_id);
+            if (authCheck == null) {
+                service.eliminaCategoria(id);
+            } else {
+                return null;
+            }
+        }else {
+            return null;
+        }
         return ResponseEntity.noContent().build();
     }
 }
