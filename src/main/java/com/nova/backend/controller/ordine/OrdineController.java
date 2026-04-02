@@ -90,7 +90,6 @@ public class OrdineController {
         }
 
         return ResponseEntity.ok(ordineService.getAllOrdini());
-    }
     /**
      * Updates the order identified by the given id with the provided data.
      *
