@@ -13,6 +13,7 @@ public class UserResponseDTO {
     private String nome;
     private String cognome;
     private String ruolo;
+    private String tipoCliente;
     private Instant createdAt;
     private boolean attivo;
 }

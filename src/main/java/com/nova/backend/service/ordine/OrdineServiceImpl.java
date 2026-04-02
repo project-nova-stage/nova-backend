@@ -24,14 +24,14 @@ public class OrdineServiceImpl implements OrdineService {
     @Override
     public OrdineDTO creaOrdine(OrdineDTO ordineDTO) {
         if (ordineDTO == null) {
-            throw new IllegalArgumentException("OrdineDTO non può essere null");
+            throw new com.nova.backend.exception.EccezioneApplicativa("OrdineDTO non puÃƒÂ² essere null", org.springframework.http.HttpStatus.BAD_REQUEST);
         }
 
         Ordine ordine = OrdineDTO.toEntity(ordineDTO);
 
         if (ordineDTO.getUtenteId() != null) {
             Utente utente = utenteRepository.findById(ordineDTO.getUtenteId())
-                    .orElseThrow(() -> new IllegalArgumentException("Utente non trovato con id " + ordineDTO.getUtenteId()));
+                    .orElseThrow(() -> new com.nova.backend.exception.EccezioneApplicativa("Utente non trovato con id " + ordineDTO.getUtenteId(), org.springframework.http.HttpStatus.BAD_REQUEST));
             ordine.setUtente(utente);
         }
 
@@ -43,7 +43,7 @@ public class OrdineServiceImpl implements OrdineService {
     public OrdineDTO getOrdineById(Long id) {
         return ordineRepository.findById(id)
                 .map(OrdineDTO::fromEntity)
-                .orElseThrow(() -> new IllegalArgumentException("Ordine non trovato con id " + id));
+                .orElseThrow(() -> new com.nova.backend.exception.EccezioneApplicativa("Ordine non trovato con id " + id, org.springframework.http.HttpStatus.BAD_REQUEST));
     }
 
     @Override
@@ -70,11 +70,11 @@ public class OrdineServiceImpl implements OrdineService {
     @Override
     public OrdineDTO aggiornaOrdine(Long id, OrdineDTO ordineDTO) {
         Ordine esistente = ordineRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Ordine non trovato con id " + id));
+                .orElseThrow(() -> new com.nova.backend.exception.EccezioneApplicativa("Ordine non trovato con id " + id, org.springframework.http.HttpStatus.BAD_REQUEST));
 
         if (ordineDTO.getUtenteId() != null) {
             Utente utente = utenteRepository.findById(ordineDTO.getUtenteId())
-                    .orElseThrow(() -> new IllegalArgumentException("Utente non trovato con id " + ordineDTO.getUtenteId()));
+                    .orElseThrow(() -> new com.nova.backend.exception.EccezioneApplicativa("Utente non trovato con id " + ordineDTO.getUtenteId(), org.springframework.http.HttpStatus.BAD_REQUEST));
             esistente.setUtente(utente);
         }
 
@@ -99,8 +99,9 @@ public class OrdineServiceImpl implements OrdineService {
     @Override
     public void eliminaOrdine(Long id) {
         if (!ordineRepository.existsById(id)) {
-            throw new IllegalArgumentException("Ordine non trovato con id " + id);
+            throw new com.nova.backend.exception.EccezioneApplicativa("Ordine non trovato con id " + id, org.springframework.http.HttpStatus.BAD_REQUEST);
         }
         ordineRepository.deleteById(id);
     }
 }
+

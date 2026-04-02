@@ -51,6 +51,6 @@ public class RichiestaServizioService {
         return repository.findById(id).map(richiesta -> {
             richiesta.setStato(nuovoStato);
             return mapper.toResponse(repository.save(richiesta));
-        }).orElseThrow(() -> new RuntimeException("Richiesta di servizio non trovata"));
+        }).orElseThrow(() -> new com.nova.backend.exception.EccezioneApplicativa("Richiesta di servizio non trovata", org.springframework.http.HttpStatus.NOT_FOUND));
     }
 }

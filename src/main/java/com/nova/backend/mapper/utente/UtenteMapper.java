@@ -18,6 +18,7 @@ public class UtenteMapper {
         dto.setNome(utente.getNome());
         dto.setCognome(utente.getCognome());
         dto.setRuolo(utente.getRuolo() != null ? utente.getRuolo().name() : null);
+        dto.setTipoCliente(utente.getTipoCliente() != null ? utente.getTipoCliente().name() : null);
         dto.setCreatedAt(utente.getCreatedAt());
         dto.setAttivo(utente.isAttivo());
         

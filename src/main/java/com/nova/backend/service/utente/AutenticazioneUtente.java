@@ -9,14 +9,14 @@ import com.nova.backend.mapper.utente.UtenteMapper;
 import com.nova.backend.model.utente.Ruolo;
 import com.nova.backend.model.utente.SessioneUtente;
 import com.nova.backend.model.utente.Utente;
-import com.nova.backend.repository.utente.SessioneUtenteRepository;
 import com.nova.backend.repository.utente.UtenteRepository;
+import com.nova.backend.security.JwtService;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.ErrorResponse;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -25,17 +25,28 @@ import java.util.Optional;
 public class AutenticazioneUtente {
 
     private final UtenteRepository utenteRepository;
-    private final SessioneUtenteRepository sessioneUtenteRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
-    public AutenticazioneUtente(UtenteRepository utenteRepository, SessioneUtenteRepository sessioneUtenteRepository, PasswordEncoder passwordEncoder) {
+    public AutenticazioneUtente(UtenteRepository utenteRepository, AuthenticationManager authenticationManager, JwtService jwtService) {
         this.utenteRepository = utenteRepository;
-        this.sessioneUtenteRepository = sessioneUtenteRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     // LOGIN
     public Map<String, Object> login(LoginRequestDTO loginRequest) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getEmail(),
+                            loginRequest.getPassword()
+                    )
+            );
+        } catch (Exception e) {
+            throw new EccezioneApplicativa("Credenziali errate", HttpStatus.UNAUTHORIZED);
+        }
+
         Utente utente = this.utenteRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new EccezioneApplicativa("Utente non trovato", HttpStatus.NOT_FOUND));
 
@@ -43,58 +54,23 @@ public class AutenticazioneUtente {
             throw new EccezioneApplicativa("Utente non attivo", HttpStatus.FORBIDDEN);
         }
 
-        if (!passwordEncoder.matches(loginRequest.getPassword(), utente.getPassword())) {
-            throw new EccezioneApplicativa("Password errata", HttpStatus.UNAUTHORIZED);
-        }
+        String jwtToken = jwtService.generateToken(utente);
 
-        String token = java.util.UUID.randomUUID().toString();
-
-        SessioneUtente sessione = new SessioneUtente();
-        sessione.setIdUtente(utente);
-        sessione.setToken(token);
-        sessione.setCreatedAt(LocalDateTime.now());
-        sessione.setExpiresAt(LocalDateTime.now().plusHours(4));
-        sessione.setRevoked(false);
-        this.sessioneUtenteRepository.save(sessione);
-
-        // Converti l'entità in DTO per evitare di esporre/mutare l'oggetto JPA gestito
         UserResponseDTO utenteDTO = UtenteMapper.toResponse(utente);
 
         Map<String, Object> payload = new HashMap<>();
         payload.put("utente", utenteDTO);
-        payload.put("token", token);
-        payload.put("dataScadenza", sessione.getExpiresAt().toString());
+        payload.put("token", jwtToken);
+        // dataScadenza fittizia, il token è autocontenuto a 24h
+        payload.put("dataScadenza", System.currentTimeMillis() + 1000 * 60 * 60 * 24);
 
         return payload;
     }
 
     public RispostaGenerica logout(String token, Long idUtente) {
-        Optional<SessioneUtente> sessionOpt = this.sessioneUtenteRepository.findByToken(token);
-        if (sessionOpt.isPresent()) {
-            SessioneUtente sessione = sessionOpt.get();
-            if (sessione.getIdUtente().getId().equals(idUtente) && !sessione.getRevoked()) {
-                sessione.setRevoked(true);
-                this.sessioneUtenteRepository.save(sessione);
-                return new RispostaGenerica("Logout effettuato con successo", null);
-            }
-        }
-        throw new EccezioneApplicativa("Token non valido o sessione non trovata", HttpStatus.UNAUTHORIZED);
-    }
-
-    public boolean isTokenValid(String token, Long idUtente) {
-        Optional<Utente> userOpt = this.utenteRepository.findById(idUtente);
-        if (!userOpt.isPresent()) {
-            return false;
-        }
-        Optional<SessioneUtente> sessionOpt = this.sessioneUtenteRepository.findByToken(token);
-        if (sessionOpt.isPresent()) {
-            SessioneUtente sessione = sessionOpt.get();
-            if (sessione.getIdUtente().getId().equals(idUtente) && !sessione.getRevoked()
-                    && sessione.getExpiresAt().isAfter(LocalDateTime.now())) {
-                return true;
-            }
-        }
-        return false;
+        // Con JWT stateless non invalidiamo il token su DB, al limite mettiamo in blacklist
+        // Per ora simuliamo un success, dato che il frontend distruggerà il token.
+        return new RispostaGenerica("Logout effettuato con successo", null);
     }
 
 
@@ -102,7 +78,13 @@ public class AutenticazioneUtente {
         if (token == null || user_id == null) {
             return new RispostaErrore("Token o user_id mancanti", 400, System.currentTimeMillis());
         }
-        boolean valid = this.isTokenValid(token, user_id);
+        
+        Optional<Utente> userOpt = utenteRepository.findById(user_id);
+        if (userOpt.isEmpty()) {
+            return new RispostaErrore("Utente non trovato", 404, System.currentTimeMillis());
+        }
+        
+        boolean valid = jwtService.isTokenValid(token.replace("Bearer ", ""), userOpt.get());
         if (!valid) {
             return new RispostaErrore("Token non valido", 401, System.currentTimeMillis());
         }

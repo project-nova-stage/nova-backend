@@ -49,7 +49,7 @@ public class CategoriaService {
     public CategoriaDTO ottieniPerId(Long id) {
         return repository.findById(id)
                 .map(mapper::toResponse)
-                .orElseThrow(() -> new RuntimeException("Categoria non trovata con ID: " + id));
+                .orElseThrow(() -> new com.nova.backend.exception.EccezioneApplicativa("Categoria non trovata con ID: " + id, org.springframework.http.HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -57,7 +57,7 @@ public class CategoriaService {
      */
     public CategoriaDTO aggiornaCategoria(Long id, CategoriaDTO dto) {
         Categoria esistente = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoria non trovata con ID: " + id));
+                .orElseThrow(() -> new com.nova.backend.exception.EccezioneApplicativa("Categoria non trovata con ID: " + id, org.springframework.http.HttpStatus.NOT_FOUND));
 
         esistente.setNome(dto.getNome());
 
@@ -70,8 +70,10 @@ public class CategoriaService {
      */
     public void eliminaCategoria(Long id) {
         if (!repository.existsById(id)) {
-            throw new RuntimeException("Categoria non trovata con ID: " + id);
+            throw new com.nova.backend.exception.EccezioneApplicativa("Categoria non trovata con ID: " + id, org.springframework.http.HttpStatus.NOT_FOUND);
         }
         repository.deleteById(id);
     }
 }
+
+
