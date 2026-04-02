@@ -41,6 +41,6 @@ public class InstallazioneService {
         return repository.findById(id).map(installazione -> {
             installazione.setStato(nuovoStato);
             return mapper.toResponse(repository.save(installazione));
-        }).orElseThrow(() -> new RuntimeException("Installazione non trovata"));
+        }).orElseThrow(() -> new com.nova.backend.exception.EccezioneApplicativa("Installazione non trovata", org.springframework.http.HttpStatus.NOT_FOUND));
     }
 }

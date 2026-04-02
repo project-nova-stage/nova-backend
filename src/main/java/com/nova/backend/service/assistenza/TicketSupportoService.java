@@ -52,7 +52,7 @@ public class TicketSupportoService {
             ticketEsistente.setPriorita(request.priority()); // Modificato in setPriorita()
             TicketSupporto aggiornato = repository.save(ticketEsistente);
             return mapper.toResponse(aggiornato);
-        }).orElseThrow(() -> new RuntimeException("Ticket non trovato"));
+        }).orElseThrow(() -> new com.nova.backend.exception.EccezioneApplicativa("Ticket non trovato", org.springframework.http.HttpStatus.NOT_FOUND));
     }
 
     // DELETE

@@ -1,6 +1,7 @@
 package com.nova.backend.service.utente;
 
 import com.nova.backend.dto.RispostaGenerica;
+import com.nova.backend.dto.utente.richiesta.AggiornaProfiloDTO;
 import com.nova.backend.dto.utente.richiesta.RegistroUtenteDTO;
 import com.nova.backend.dto.utente.risposta.UserResponseDTO;
 import com.nova.backend.exception.EccezioneApplicativa;
@@ -76,6 +77,49 @@ public class ServiceUtente {
         return this.utenteRepository.findAll().stream()
                 .map(UtenteMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    public UserResponseDTO getProfiloUtente(Long idUtente) {
+        Utente utente = this.utenteRepository.findById(idUtente)
+                .orElseThrow(() -> new EccezioneApplicativa("Utente non trovato", HttpStatus.NOT_FOUND));
+        return UtenteMapper.toResponse(utente);
+    }
+
+    public UserResponseDTO aggiornaProfiloUtente(Long idUtente, AggiornaProfiloDTO req) {
+        Utente utente = this.utenteRepository.findById(idUtente)
+                .orElseThrow(() -> new EccezioneApplicativa("Utente non trovato", HttpStatus.NOT_FOUND));
+
+        if (req.getEmail() != null && !req.getEmail().isBlank()) {
+            this.utenteRepository.findByEmail(req.getEmail())
+                    .filter(trovato -> !trovato.getId().equals(idUtente))
+                    .ifPresent(trovato -> {
+                        throw new EccezioneApplicativa("Email già in uso", HttpStatus.CONFLICT);
+                    });
+            utente.setEmail(req.getEmail());
+        }
+
+        if (req.getNome() != null && !req.getNome().isBlank()) {
+            utente.setNome(req.getNome());
+        }
+
+        if (req.getCognome() != null && !req.getCognome().isBlank()) {
+            utente.setCognome(req.getCognome());
+        }
+
+        if (req.getTipoCliente() != null && !req.getTipoCliente().isBlank()) {
+            if (utente.getRuolo() != Ruolo.CLIENTE) {
+                throw new EccezioneApplicativa(
+                        "Il tipo cliente non è applicabile per il ruolo " + utente.getRuolo().name(),
+                        HttpStatus.BAD_REQUEST);
+            }
+            if (!tipoValido(req.getTipoCliente())) {
+                throw new EccezioneApplicativa("Tipo cliente inesistente", HttpStatus.BAD_REQUEST);
+            }
+            utente.setTipoCliente(TipoCliente.valueOf(req.getTipoCliente()));
+        }
+
+        Utente aggiornato = this.utenteRepository.save(utente);
+        return UtenteMapper.toResponse(aggiornato);
     }
 
     // Verifica se quello che viene inserito corrisponde all'enum

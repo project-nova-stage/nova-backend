@@ -37,14 +37,14 @@ public class ProdottoService {
      */
     public ProdottoResponseDTO creaProdotto(ProdottoRequestDTO request) {
         if (repository.existsBySku(request.getSku())) {
-            throw new RuntimeException("Esiste già un prodotto con questo SKU: " + request.getSku());
+            throw new com.nova.backend.exception.EccezioneApplicativa("Esiste già un prodotto con questo SKU: " + request.getSku(), org.springframework.http.HttpStatus.CONFLICT);
         }
 
         Prodotto prodotto = mapper.toEntity(request);
         
         if (request.getCategoriaId() != null) {
             Categoria cat = categoriaRepository.findById(request.getCategoriaId())
-                    .orElseThrow(() -> new RuntimeException("Categoria non trovata: " + request.getCategoriaId()));
+                    .orElseThrow(() -> new com.nova.backend.exception.EccezioneApplicativa("Categoria non trovata: " + request.getCategoriaId(), org.springframework.http.HttpStatus.NOT_FOUND));
             prodotto.setCategoria(cat);
         }
 
@@ -67,7 +67,7 @@ public class ProdottoService {
     public ProdottoResponseDTO ottieniPerSku(String sku) {
         return repository.findBySku(sku)
                 .map(mapper::toResponse)
-                .orElseThrow(() -> new RuntimeException("Prodotto non trovato con SKU: " + sku));
+                .orElseThrow(() -> new com.nova.backend.exception.EccezioneApplicativa("Prodotto non trovato con SKU: " + sku, org.springframework.http.HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -76,7 +76,7 @@ public class ProdottoService {
     public ProdottoResponseDTO ottieniPerId(Long id) {
         return repository.findById(id)
                 .map(mapper::toResponse)
-                .orElseThrow(() -> new RuntimeException("Prodotto non trovato con ID: " + id));
+                .orElseThrow(() -> new com.nova.backend.exception.EccezioneApplicativa("Prodotto non trovato con ID: " + id, org.springframework.http.HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -84,7 +84,7 @@ public class ProdottoService {
      */
     public ProdottoResponseDTO aggiornaProdotto(Long id, ProdottoRequestDTO request) {
         Prodotto esistente = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Prodotto non trovato con ID: " + id));
+                .orElseThrow(() -> new com.nova.backend.exception.EccezioneApplicativa("Prodotto non trovato con ID: " + id, org.springframework.http.HttpStatus.NOT_FOUND));
 
         esistente.setNome(request.getNome());
         esistente.setPrezzo(request.getPrezzo());
@@ -96,7 +96,7 @@ public class ProdottoService {
         
         if (request.getCategoriaId() != null) {
             Categoria cat = categoriaRepository.findById(request.getCategoriaId())
-                    .orElseThrow(() -> new RuntimeException("Categoria non trovata: " + request.getCategoriaId()));
+                    .orElseThrow(() -> new com.nova.backend.exception.EccezioneApplicativa("Categoria non trovata: " + request.getCategoriaId(), org.springframework.http.HttpStatus.NOT_FOUND));
             esistente.setCategoria(cat);
         }
 
@@ -109,8 +109,10 @@ public class ProdottoService {
      */
     public void eliminaProdotto(Long id) {
         if (!repository.existsById(id)) {
-            throw new RuntimeException("Prodotto non trovato con ID: " + id);
+            throw new com.nova.backend.exception.EccezioneApplicativa("Prodotto non trovato con ID: " + id, org.springframework.http.HttpStatus.NOT_FOUND);
         }
         repository.deleteById(id);
     }
 }
+
+
