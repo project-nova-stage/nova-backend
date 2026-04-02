@@ -1,4 +1,4 @@
-﻿package com.nova.backend.service.catalogo;
+package com.nova.backend.service.catalogo;
 
 import com.nova.backend.dto.catalogo.richiesta.ProdottoRequestDTO;
 import com.nova.backend.dto.catalogo.risposta.ProdottoResponseDTO;

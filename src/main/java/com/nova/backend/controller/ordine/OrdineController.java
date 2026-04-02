@@ -120,13 +120,11 @@ public class OrdineController {
         Object ownershipError = ordineService.verificaAppartenenza(user_id, id);
         if (ownershipError instanceof RispostaErrore) {
             RispostaErrore err = (RispostaErrore) ownershipError;
-            return ResponseEntity.status(err.getCodice()).body(err);
+            return ResponseEntity.status(err.getStato()).body(err);
         }
 
         OrdineDTO aggiornato = ordineService.aggiornaOrdine(id, ordineDTO);
         return ResponseEntity.ok(aggiornato);
-    }
-
     }
     /**
      * Deletes the order identified by the given id, after validating the user's auth token and client role.
@@ -155,7 +153,7 @@ public class OrdineController {
         Object ownershipError = ordineService.verificaAppartenenza(user_id, id);
         if (ownershipError instanceof RispostaErrore) {
             RispostaErrore err = (RispostaErrore) ownershipError;
-            return ResponseEntity.status(err.getCodice()).body(err);
+            return ResponseEntity.status(err.getStato()).body(err);
         }
 
         ordineService.eliminaOrdine(id);

@@ -122,29 +122,7 @@ public class AutenticazioneUtente {
         }
     }
 
-    /**
-     * Checks whether the user identified by `user_id` has the `CLIENTE` role and returns an authorization error when not.
-     *
-     * If the user is not found, returns a `RispostaErrore` indicating the user was not found (message "User non trovato", status 400).
-     * If the user exists but does not have the `CLIENTE` role, returns a `RispostaErrore` indicating lack of authorization (message "Non autorizzato", status 404).
-     *
-     * @param user_id the identifier of the user to check
-     * @return `null` if the user exists and has role `Ruolo.CLIENTE`; otherwise a `RispostaErrore` describing the failure
-     */
-    public Object checkClienteError(Long user_id) {
-        Optional<Utente> userOpt = this.utenteRepository.findById(user_id);
-        if (!userOpt.isPresent()) {
-            return new RispostaErrore("User non trovato", 400, System.currentTimeMillis());
-        }
-        Ruolo ruolo = userOpt.get().getRuolo();
-        if(ruolo.equals(Ruolo.CLIENTE)) {
-            System.out.println("55");
-            return null;
-        }else{
-            System.out.println("60");
-            return new RispostaErrore("Non autorizato", 404, System.currentTimeMillis());
-        }
-    }
+    
 
 
 }
