@@ -120,7 +120,7 @@ public class OrdineController {
         Object ownershipError = ordineService.verificaAppartenenza(user_id, id);
         if (ownershipError instanceof RispostaErrore) {
             RispostaErrore err = (RispostaErrore) ownershipError;
-            return ResponseEntity.status(err.getCodice()).body(err);
+            return ResponseEntity.status(err.getStato()).body(err);
         }
 
         OrdineDTO aggiornato = ordineService.aggiornaOrdine(id, ordineDTO);
@@ -153,7 +153,7 @@ public class OrdineController {
         Object ownershipError = ordineService.verificaAppartenenza(user_id, id);
         if (ownershipError instanceof RispostaErrore) {
             RispostaErrore err = (RispostaErrore) ownershipError;
-            return ResponseEntity.status(err.getCodice()).body(err);
+            return ResponseEntity.status(err.getStato()).body(err);
         }
 
         ordineService.eliminaOrdine(id);
