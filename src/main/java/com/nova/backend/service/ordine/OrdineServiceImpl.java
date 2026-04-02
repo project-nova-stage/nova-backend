@@ -8,6 +8,8 @@ import com.nova.backend.repository.ordine.OrdineRepository;
 import com.nova.backend.repository.utente.UtenteRepository;
 import org.springframework.stereotype.Service;
 
+import com.nova.backend.dto.RispostaErrore;
+import java.util.Optional;
 import java.util.List;
 
 @Service
@@ -24,7 +26,7 @@ public class OrdineServiceImpl implements OrdineService {
     @Override
     public OrdineDTO creaOrdine(OrdineDTO ordineDTO) {
         if (ordineDTO == null) {
-            throw new com.nova.backend.exception.EccezioneApplicativa("OrdineDTO non può essere null", org.springframework.http.HttpStatus.BAD_REQUEST);
+            throw new com.nova.backend.exception.EccezioneApplicativa("OrdineDTO non puÃ² essere null", org.springframework.http.HttpStatus.BAD_REQUEST);
         }
 
         Ordine ordine = OrdineDTO.toEntity(ordineDTO);
@@ -102,6 +104,18 @@ public class OrdineServiceImpl implements OrdineService {
             throw new com.nova.backend.exception.EccezioneApplicativa("Ordine non trovato con id " + id, org.springframework.http.HttpStatus.NOT_FOUND);
         }
         ordineRepository.deleteById(id);
+    }
+
+    //VERIFICA SE L'ORDINE APPARTIENE ALL'UTENTE
+    public RispostaErrore verificaAppartenenza(Long user_id, Long ordine_id) {
+        Optional<Ordine> ordine = ordineRepository.findById(ordine_id);
+        if (ordine.isEmpty()) {
+            return new RispostaErrore("Ordine non trovato", 404, System.currentTimeMillis());
+        }
+        if (ordine.get().getUtente().getId().equals(user_id)) {
+            return null;
+        }
+        return new RispostaErrore("Non autorizzato", 403, System.currentTimeMillis());
     }
 }
 

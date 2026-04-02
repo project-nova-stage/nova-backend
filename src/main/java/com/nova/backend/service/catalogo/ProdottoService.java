@@ -1,4 +1,4 @@
-package com.nova.backend.service.catalogo;
+﻿package com.nova.backend.service.catalogo;
 
 import com.nova.backend.dto.catalogo.richiesta.ProdottoRequestDTO;
 import com.nova.backend.dto.catalogo.risposta.ProdottoResponseDTO;
@@ -37,7 +37,7 @@ public class ProdottoService {
      */
     public ProdottoResponseDTO creaProdotto(ProdottoRequestDTO request) {
         if (repository.existsBySku(request.getSku())) {
-            throw new com.nova.backend.exception.EccezioneApplicativa("Esiste già un prodotto con questo SKU: " + request.getSku(), org.springframework.http.HttpStatus.CONFLICT);
+            throw new com.nova.backend.exception.EccezioneApplicativa("Esiste giÃ  un prodotto con questo SKU: " + request.getSku(), org.springframework.http.HttpStatus.CONFLICT);
         }
 
         Prodotto prodotto = mapper.toEntity(request);

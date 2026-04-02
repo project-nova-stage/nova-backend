@@ -97,11 +97,23 @@ public class AutenticazioneUtente {
         }
         Ruolo ruolo = userOpt.get().getRuolo();
         if(ruolo.equals(Ruolo.ADMIN)) {
-            System.out.println("55");
             return null;
         }else{
-            System.out.println("60");
-            return new RispostaErrore("Non autorizato", 404, System.currentTimeMillis());
+            return new RispostaErrore("Non autorizzato", 403, System.currentTimeMillis());
+        }
+    }
+
+    //VERIFICA SE è UN CLIENTE
+    public Object checkClienteError(Long user_id) {
+        Optional<Utente> userOpt = this.utenteRepository.findById(user_id);
+        if (userOpt.isEmpty()) {
+            return new RispostaErrore("User non trovato", 400, System.currentTimeMillis());
+        }
+        Ruolo ruolo = userOpt.get().getRuolo();
+        if (ruolo.equals(Ruolo.CLIENTE)) {
+            return null;
+        } else {
+            return new RispostaErrore("Non autorizzato", 403, System.currentTimeMillis());
         }
     }
 

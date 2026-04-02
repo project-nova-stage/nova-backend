@@ -1,5 +1,6 @@
 package com.nova.backend.service.ordine;
 
+import com.nova.backend.dto.RispostaErrore;
 import com.nova.backend.dto.ordine.OrdineDTO;
 import com.nova.backend.model.ordine.StatoOrdine;
 
@@ -20,4 +21,6 @@ public interface OrdineService {
     OrdineDTO aggiornaOrdine(Long id, OrdineDTO ordineDTO);
 
     void eliminaOrdine(Long id);
+
+    RispostaErrore verificaAppartenenza(Long user_id, Long ordine_id);
 }
