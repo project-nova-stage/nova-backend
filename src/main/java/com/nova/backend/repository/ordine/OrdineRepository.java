@@ -25,4 +25,6 @@ public interface OrdineRepository extends JpaRepository<Ordine, Long> {
 
     /** Restituisce tutti gli ordini appartententi a un utente, senza ordinamento di default. */
     List<Ordine> findByUtenteId(Long utenteId);
+
+
 }

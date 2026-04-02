@@ -1,5 +1,6 @@
 package com.nova.backend.service.ordine;
 
+import com.nova.backend.dto.RispostaErrore;
 import com.nova.backend.dto.ordine.OrdineDTO;
 import com.nova.backend.model.ordine.Ordine;
 import com.nova.backend.model.ordine.StatoOrdine;
@@ -9,6 +10,7 @@ import com.nova.backend.repository.utente.UtenteRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrdineServiceImpl implements OrdineService {
@@ -103,4 +105,19 @@ public class OrdineServiceImpl implements OrdineService {
         }
         ordineRepository.deleteById(id);
     }
+
+
+    //VERIFICA SE L'ORDINE APPARTIENE ALL'UTENTE
+    public Object verificaAppartenenza(Long user_id, Long ordine_id) {
+        Optional<Ordine> ordine = ordineRepository.findById(ordine_id);
+        Ordine ordineOpt = ordine.get();
+
+        if(ordineOpt.getUtente().getId().equals(user_id)) {
+            return null;
+        }
+        return new RispostaErrore("Non autorizato", 405, System.currentTimeMillis());
+    }
+
+
+
 }

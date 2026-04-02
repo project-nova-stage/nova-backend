@@ -3,6 +3,7 @@ package com.nova.backend.controller.ordine;
 import com.nova.backend.dto.ordine.OrdineDTO;
 import com.nova.backend.model.ordine.StatoOrdine;
 import com.nova.backend.service.ordine.OrdineService;
+import com.nova.backend.service.utente.AutenticazioneUtente;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,15 +14,30 @@ import java.util.List;
 public class OrdineController {
 
     private final OrdineService ordineService;
+    private final AutenticazioneUtente  autenticazioneUtente;
 
-    public OrdineController(OrdineService ordineService) {
+    public OrdineController(OrdineService ordineService, AutenticazioneUtente autenticazioneUtente) {
         this.ordineService = ordineService;
+        this.autenticazioneUtente = autenticazioneUtente;
     }
-
+    //f
     @PostMapping
-    public ResponseEntity<OrdineDTO> creaOrdine(@RequestBody OrdineDTO ordineDTO) {
-        OrdineDTO creato = ordineService.creaOrdine(ordineDTO);
-        return ResponseEntity.ok(creato);
+    public ResponseEntity<OrdineDTO> creaOrdine(@RequestHeader("X-Auth-Token") String token, @RequestHeader("X-User-Id") Long user_id, @RequestBody OrdineDTO ordineDTO) {
+        //Verifica se il token dell'utente è valido o meno
+        Object authErr = this.autenticazioneUtente.checkAuthError(token, user_id);
+        if(authErr == null) {
+            //Verifica se l'utente è un cliente
+            Object authCheck = this.autenticazioneUtente.checkClienteError(user_id);
+            if(authCheck == null) {
+                OrdineDTO creato = ordineService.creaOrdine(ordineDTO);
+                return ResponseEntity.ok(creato);
+            }else{
+                return null;
+            }
+        }else{
+            return null;
+        }
+
     }
 
     @GetMapping("/{id}")
@@ -45,16 +61,41 @@ public class OrdineController {
 
         return ResponseEntity.ok(ordineService.getAllOrdini());
     }
-
+    //f
     @PutMapping("/{id}")
-    public ResponseEntity<OrdineDTO> aggiornaOrdine(@PathVariable Long id, @RequestBody OrdineDTO ordineDTO) {
-        OrdineDTO aggiornato = ordineService.aggiornaOrdine(id, ordineDTO);
-        return ResponseEntity.ok(aggiornato);
-    }
+    public ResponseEntity<OrdineDTO> aggiornaOrdine(@RequestHeader("X-Auth-Token") String token, @RequestHeader("X-User-Id") Long user_id, @PathVariable Long id, @RequestBody OrdineDTO ordineDTO) {
+        //Verifica se il token dell'utente è valido o meno
+        Object authErr = this.autenticazioneUtente.checkAuthError(token, user_id);
+        if(authErr == null) {
+            //Verifica se l'utente è un cliente
+            Object authCheck = this.autenticazioneUtente.checkClienteError(user_id);
+            if(authCheck == null) {
+                OrdineDTO aggiornato = ordineService.aggiornaOrdine(id, ordineDTO);
+                return ResponseEntity.ok(aggiornato);
+            }else{
+                return null;
+            }
+        }else{
+            return null;
+        }
 
+    }
+    //f
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminaOrdine(@PathVariable Long id) {
-        ordineService.eliminaOrdine(id);
+    public ResponseEntity<Void> eliminaOrdine(@RequestHeader("X-Auth-Token") String token, @RequestHeader("X-User-Id") Long user_id, @PathVariable Long id) {
+        //Verifica se il token dell'utente è valido o meno
+        Object authErr = this.autenticazioneUtente.checkAuthError(token, user_id);
+        if(authErr == null) {
+            //Verifica se l'utente è un cliente
+            Object authCheck = this.autenticazioneUtente.checkClienteError(user_id);
+            if(authCheck == null) {
+                ordineService.eliminaOrdine(id);
+            }else{
+                return null;
+            }
+        }else{
+            return null;
+        }
         return ResponseEntity.noContent().build();
     }
 }
