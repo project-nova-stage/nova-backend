@@ -55,7 +55,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Whitelist
                         .requestMatchers("/api/v1/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/v1/catalogo/prodotto/**", "/api/v1/catalogo/prodotti/**", "/api/v1/catalogo/categoria/**", "/api/v1/catalogo/categorie/**").permitAll()   
+                        .requestMatchers("/utente/login", "/utente/registrazione").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/v1/catalogo/prodotto/**", "/api/v1/catalogo/prodotti/**", "/api/v1/catalogo/categoria/**", "/api/v1/catalogo/categorie/**").permitAll()
                         // Rotte Admin
                         .requestMatchers("/api/v1/admin/**", "/api/v1/catalogo/prodotto/**", "/api/v1/catalogo/prodotti/**", "/api/v1/catalogo/categoria/**", "/api/v1/catalogo/categorie/**").hasRole("ADMIN")
                         // Rotte bloccate (richiedono login)
@@ -91,7 +92,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
         configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization","Content-Type","X-Requested-With","Accept","Origin","Access-Control-Request-Method","Access-Control-Request-Headers"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(false);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

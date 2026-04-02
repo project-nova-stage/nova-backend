@@ -7,7 +7,6 @@ import com.nova.backend.dto.utente.risposta.UserResponseDTO;
 import com.nova.backend.exception.EccezioneApplicativa;
 import com.nova.backend.mapper.utente.UtenteMapper;
 import com.nova.backend.model.utente.Ruolo;
-import com.nova.backend.model.utente.SessioneUtente;
 import com.nova.backend.model.utente.Utente;
 import com.nova.backend.repository.utente.UtenteRepository;
 import com.nova.backend.security.JwtService;
@@ -15,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
-import org.springframework.web.ErrorResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,8 +34,9 @@ public class AutenticazioneUtente {
 
     // LOGIN
     public Map<String, Object> login(LoginRequestDTO loginRequest) {
+        org.springframework.security.core.Authentication authentication;
         try {
-            authenticationManager.authenticate(
+            authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginRequest.getEmail(),
                             loginRequest.getPassword()
@@ -47,8 +46,7 @@ public class AutenticazioneUtente {
             throw new EccezioneApplicativa("Credenziali errate", HttpStatus.UNAUTHORIZED);
         }
 
-        Utente utente = this.utenteRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new EccezioneApplicativa("Utente non trovato", HttpStatus.NOT_FOUND));
+        Utente utente = (Utente) authentication.getPrincipal();
 
         if (!utente.isEnabled()) {
             throw new EccezioneApplicativa("Utente non attivo", HttpStatus.FORBIDDEN);
@@ -61,8 +59,6 @@ public class AutenticazioneUtente {
         Map<String, Object> payload = new HashMap<>();
         payload.put("utente", utenteDTO);
         payload.put("token", jwtToken);
-        // dataScadenza fittizia, il token è autocontenuto a 24h
-        payload.put("dataScadenza", System.currentTimeMillis() + 1000 * 60 * 60 * 24);
 
         return payload;
     }

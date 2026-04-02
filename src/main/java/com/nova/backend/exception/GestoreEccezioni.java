@@ -1,6 +1,8 @@
 package com.nova.backend.exception;
 
 import com.nova.backend.dto.RispostaErrore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
  */
 @RestControllerAdvice
 public class GestoreEccezioni {
+
+    private static final Logger log = LoggerFactory.getLogger(GestoreEccezioni.class);
 
     // 1. Eccezioni personalizzate dell'applicazione
     @ExceptionHandler(EccezioneApplicativa.class)
@@ -60,8 +64,8 @@ public class GestoreEccezioni {
     // 6. Qualsiasi altra eccezione non gestita (Errore 500 generico)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<RispostaErrore> gestisciEccezioneGenerica(Exception ex) {
-        // Usa ex.getMessage() per debug, o loggalo in un logger reale
-        RispostaErrore corpo = new RispostaErrore("Errore interno del server: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value(), System.currentTimeMillis());
+        log.error("Errore interno non gestito", ex);
+        RispostaErrore corpo = new RispostaErrore("Si è verificato un errore interno. Riprova più tardi.", HttpStatus.INTERNAL_SERVER_ERROR.value(), System.currentTimeMillis());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(corpo);
     }
 }
