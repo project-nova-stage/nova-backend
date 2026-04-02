@@ -1,0 +1,113 @@
+========================================================================
+🚀 PROJECT NOVA - GUIDA TECNICA E ARCHITETTURALE DEL BACKEND
+========================================================================
+Questo documento è una mappa scritta per te, per capire esattamente 
+come è costruito il "motore" della nostra applicazione.
+
+---
+1. L'ARCHITETTURA A LIVELLI (LAYERED ARCHITECTURE)
+---
+Il nostro backend è diviso in "strati" (layer). Immagina una fabbrica:
+il prodotto entra dalla porta principale, passa per vari reparti
+dove viene controllato, lavorato e infine immagazzinato.
+
+I livelli principali (e le cartelle corrispondenti) sono:
+
+📦 controller/ (La "Reception" o "Gli Sportelli") -> FASE 5
+   - Cosa sono: Sono i punti di contatto con l'esterno (es. Frontend in Angular).
+   - Cosa fanno: Ricevono le chiamate HTTP (GET, POST, ecc.) da Internet.
+   - Regola d'oro: Non fanno MAI calcoli o verifiche complesse. Prendono 
+     le richieste, le passano ai Services, e restituiscono le risposte.
+
+🧠 service/ (Il "Cervello" o "Reparto Produzione") -> FASE 4 (Ci stiamo lavorando)
+   - Cosa sono: È dove vive la VERA intelligenza dell'applicazione (Business Logic).
+   - Cosa fanno: Fanno verifiche (es. "L'utente ha i soldi?", "Il prodotto esiste?"), 
+     eseguono calcoli, mandano email, ecc.
+   - Regola d'oro: È qui che si concentra il 90% del lavoro logico.
+
+📚 repository/ (Il "Bibliotecario") -> FASE 2
+   - Cosa sono: Le interfacce che parlano direttamente con il Database (PostgreSQL).
+   - Cosa fanno: Salvano, cercano, aggiornano o eliminano dati. 
+   - Esempio: Invece di scrivere query SQL manuali, diciamo al repository 
+     "trovaPerEmail(email)" e lui lo fa per noi.
+
+🏗️ model/ (I "Mattoni" o "Archivio") -> FASE 1
+   - Cosa sono: Le "Entità" (Entity JPA). Rappresentano le tabelle vere e 
+     proprie nel database.
+   - Esempio: La classe 'Utente.java' è la tabella 'utenti'.
+   - Regola d'oro: Queste classi non escono MAI dal backend per ragioni 
+     di sicurezza (contengono password, dati sensibili).
+
+✉️ dto/ (I "Pacchi Trasporto" o Data Transfer Object) -> FASE 3
+   - Cosa sono: Oggetti "leggeri" creati apposta per viaggiare su internet.
+   - Request DTO: Quello che l'utente ci *invia* (es. LoginRequestDTO con email e password).
+     Hanno regole rigide (Bean Validation: @NotBlank, @Email) per bloccare dati sporchi.
+   - Response DTO: Quello che noi *inviamo* all'utente (es. UserResponseDTO: nome e ruoli, 
+     MA SENZA la password).
+
+🔄 mapper/ (I "Traduttori") -> FASE 3
+   - Cosa fanno: Convertono le Entità in DTO e viceversa. 
+   - Esempio: Prendono un 'Utente' dal DB, gli tolgono la password, 
+     e creano un 'UserResponseDTO' da spedire al frontend.
+
+
+---
+2. I 5 MODULI (DOMINI) DEL PROGETTO
+---
+Abbiamo diviso ogni strato (model, dto, mapper, ecc.) in 5 reparti isolati.
+Questo rende il codice super ordinato e professionale (Modular Monolith).
+
+👤 1. Modulo UTENTE (Identity & Auth)
+   - Entità: Utente, Ruolo, TipoCliente.
+   - Scopo: Gestisce la registrazione, il login, i ruoli (Admin vs Cliente).
+
+🛍️ 2. Modulo CATALOGO (Products)
+   - Entità: Prodotto, Categoria, ImmagineProdotto, SpecificaProdotto.
+   - Scopo: La vetrina. Gestisce i prodotti, le loro varianti, foto e specifiche tecniche.
+
+🛒 3. Modulo ORDINE (Sales)
+   - Entità: Carrello, CarrelloProdotto, Ordine, OrdineProdotto, StatoOrdine.
+   - Scopo: Il ciclo di vendita. Dal carrello provvisorio fino all'ordine concluso 
+     (dove il 'Mapper' congela il prezzo per non cambiarlo in futuro).
+
+🤖 4. Modulo IOT (Domotica)
+   - Entità: Dispositivo, Automazione, LogDispositivo, StatisticaEnergia, ecc.
+   - Scopo: È il cuore di NeuroHome. Gestisce i robot e la domotica degli utenti, 
+     raccoglie le loro statistiche (es. consumi) e gestisce gli stati (Online/Offline).
+
+🎧 5. Modulo ASSISTENZA (Customer Care)
+   - Entità: TicketSupporto, MessaggioSupporto, RichiestaServizio, Recensione.
+   - Scopo: Servizio clienti. Permette agli utenti di aprire ticket per guasti 
+     o richiedere preventivi/sopralluoghi per le installazioni.
+
+
+---
+3. ESEMPIO DI FLUSSO COMPLETO (Registrazione Utente)
+---
+Vediamo come tutti questi file collaborano insieme quando un nuovo 
+utente preme "Registrati" sul frontend Angular:
+
+1. DTO (Request): Angular invia un 'RegistroUtenteDTO'. Al suo interno ci sono email e password. 
+   Il DTO controlla che l'email abbia la chiocciola e la password sia di 8 caratteri.
+   
+2. CONTROLLER: L''AuthController' prende il DTO, vede che è valido e chiama lo 'UserService'.
+
+3. SERVICE: L''UserService' controlla se l'email esiste già usando l''UtenteRepository'. 
+   Se non esiste, usa il 'Mapper' per trasformare il 'RegistroUtenteDTO' in 
+   un'Entità 'Utente'. Poi cripta la password.
+
+4. REPOSITORY & MODEL: Il service chiama 'UtenteRepository.save(utente)'. 
+   L'Etità 'Utente' viene scritta formalmente nel database PostgreSQL.
+
+5. MAPPER & DTO (Response): L'utente è stato salvato. Il Service riprende l'Entità dal DB, 
+   usa il 'Mapper' per trasformarla in 'UserResponseDTO' (nascondendo la password criptata) 
+   e la restituisce fino al Controller, che la manda indietro ad Angular con un bel "200 OK".
+
+
+========================================================================
+CONCLUSIONE
+========================================================================
+Avere questa struttura rigorosa e separata in cartelle ci permette di non
+ritrovarci mai con il "codice a spaghetti" dove non si capisce nulla.
+Ogni file ha un compito, e UNO solo! Questo è il segreto per un software
+sicuro, testabile e di successo!

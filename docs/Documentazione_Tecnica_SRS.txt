@@ -1,0 +1,72 @@
+﻿================================================================================
+DOCUMENTAZIONE TECNICA E SOFTWARE REQUIREMENTS SPECIFICATION (SRS)
+================================================================================
+Progetto: "Nova" - Piattaforma e-commerce / Gestione Ordini & Assistenza
+Data: 31 Marzo 2026
+
+1. INTRODUZIONE
+Il progetto "Nova" è una soluzione software full-stack destinata alla gestione di 
+prodotti (catalogo), ordini, utenti (clienti e admin) e del relativo sistema 
+di assistenza (ticket e supporto).
+
+2. ARCHITETTURA DI SISTEMA
+L'architettura del sistema segue il pattern "Client-Server" con:
+- Backend: Applicazione RESTful sviluppata in Java con framework Spring Boot.
+- Frontend: Single Page Application (SPA) realizzata con framework Angular.
+- Database: Database relazionale PostgreSQL in cloud (es. Neon.tech).
+
+3. STACK TECNOLOGICO E DIPENDENZE
+
+3.1 Backend (Java 21+)
+- Framework core: Spring Boot (spring-boot-starter-web)
+- Persistenza dei dati: Spring Data JPA (Hibernate)
+- Database: PostgreSQL (driver JDBC) + H2 Database (per unit tests in memoria)
+- Sicurezza: Spring Security (spring-boot-starter-security) con password crittografate (BCrypt).
+- Validazione: Spring Boot Validation
+- Documentazione API: SpringDoc OpenAPI (Swagger UI) per l'interfaccia interattiva dell'API
+- Code-gen e boilerplate: Lombok
+
+3.2 Frontend (Node 24.x+)
+- Framework: Angular 21 (core, common, animations, forms, router)
+- Icone: lucide-angular (libreria iconografica)
+- Testing: Vitest e jsdom
+- Code Formatting: Prettier
+- Toolchain: Angular CLI / Vite builder integrato.
+
+4. STRUTTURA DEL CODICE - BACKEND
+Il codice sorgente lato server (com.nova.backend) adotta l'architettura a livello N ("Layered Architecture"):
+
+- controller: Espone gli endpoints API REST e si occupa di validare le richieste in ingresso.
+   Sotto-moduli: 
+   * ssistenza: TicketSupportoController, MessaggioSupportoController, ecc. (gestione richieste utenti e admin)
+   * catalogo: CategoriaController, ProdottoController (lettura e modifica del catalogo prodotti)
+   * ordine: OrdineController (storico e gestione degli ordini/carrello)
+   * UtenteController: gestione profilazione, registrazione ed autenticazione.
+
+- service: Contiene la business logic pura dell'applicativo. Isola il database dai controller. Includono metodi come creaCategoria(), ottieniTutte(), ecc., tutti annotati con @Transactional per garantire il corretto commit su DB.
+
+- epository: Interfacce basate su Spring Data JPA (JpaRepository). Forniscono al livello Service funzioni CRUD di base su database.
+
+- model (o entity): Interfacce e Classi che rispecchiano le tabelle nel RDBMS. L'ORM (Hibernate) mappa ogni entità. (es. Categoria, con associazione Parent-Child nidificata ad albero).
+
+- dto: Data Transfer Objects. Oggetti intermedi usati dai controller per limitare lo scambio di dati grezzi dal database. Permettono il disaccoppiamento tra API e Base di Dati.
+
+- mapper: Classi Helper (utilizzando solitamente il costrutto Builder o la mappatura manuale, come CategoriaMapper) per tradurre da Entità a DTO o viceversa prima/dopo l'archiviazione dati. Generano anche campi secondari (come la generazione di alias SEO, "slug").
+
+- config: Contiene classi di configurazione del framework (es. SecurityConfig), le quali si preoccupano ad esempio di:
+  * Filtrare l'accesso ai controller via CORS.
+  * Disabilitare/Abilitare il flusso CSRF per i client disaccoppiati (Angular).
+  * Definire il Password Encoder (BCrypt).
+
+5. FLUSSO DEI DATI (Esempio: Inserimento Categoria)
+1. Il client Angular manda una HTTP POST a /api/v1/catalogo/categoria con i dati in JSON.
+2. Spring Boot intercetta mediante CategoriaController. Il parametro @Valid assicura l'integrità iniziale.
+3. Il Controller reindirizza il DTO al CategoriaService.
+4. Il Service utilizza CategoriaMapper per convertire il DTO in una entità JPA vera e propria. Lo Slug viene automaticamente calcolato.
+5. CategoriaRepository esegue save() che genera e lancia lo statement "INSERT INTO" al database DB PostgreSQL.
+6. Il risultato viene rimappato a DTO e rispedito alla web-app con Status Code 201 (Created).
+
+6. LINEE GUIDA DEL CODICE
+- Commenti e Javadoc descrivono le funzionalità a livello classe/interfaccia/metodo pubblico.
+- Configurazione multi-environment (pplication-local.properties per sviluppo, pplication.properties globale).
+================================================================================
