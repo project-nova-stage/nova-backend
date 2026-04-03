@@ -91,32 +91,40 @@ public class DataSeeder implements CommandLineRunner {
             return utenteRepository.save(u);
         });
 
-        // Resetta prodotti per il seeding
-        prodottoRepository.deleteAll();
-        categoriaRepository.deleteAll();
+        // Categorie (idempotente)
+        Categoria catHub = upsertCategoria("Hub", "Hub e centralini domestici");
+        Categoria catSicurezza = upsertCategoria("Sicurezza", "Allarmi e telecamere");
 
-        // Categorie
-        Categoria catHub = new Categoria(null, "Hub", "Hub e centralini domestici");
-        catHub = categoriaRepository.save(catHub);
+        // Prodotti (idempotente)
+        upsertProdotto(
+                "SH-HUB-01",
+                "Home Hub Zigbee/Wi-Fi",
+                "L'hub centrale per il tuo ecosistema smart, compatibile con Zigbee 3.0 e Wi-Fi 6.",
+                new BigDecimal("129.99"),
+                50,
+                true,
+                catHub
+        );
 
-        Categoria catSicurezza = new Categoria(null, "Sicurezza", "Allarmi e telecamere");
-        catSicurezza = categoriaRepository.save(catSicurezza);
+        upsertProdotto(
+                "SC-CAM-PR",
+                "Telecamera IP 360",
+                "Controllo totale degli ambienti con visione notturna AI-powered 360 gradi.",
+                new BigDecimal("199.50"),
+                22,
+                true,
+                catSicurezza
+        );
 
-        // 2. Prodotti Reali
-        Prodotto p1 = new Prodotto("SH-HUB-01", "Home Hub Zigbee/Wi-Fi", new BigDecimal("129.99"), 50, true);
-        p1.setDescrizione("L'hub centrale per il tuo ecosistema smart, compatibile con Zigbee 3.0 e Wi-Fi 6.");
-        p1.setCategoria(catHub);
-        prodottoRepository.save(p1);
-
-        Prodotto p2 = new Prodotto("SC-CAM-PR", "Telecamera IP 360", new BigDecimal("199.50"), 22, true);
-        p2.setDescrizione("Controllo totale degli ambienti con visione notturna AI-powered 360 gradi.");
-        p2.setCategoria(catSicurezza);
-        prodottoRepository.save(p2);
-
-        Prodotto p3 = new Prodotto("ST-THM-01", "Termostato Smart Modulare", new BigDecimal("149.00"), 20, true);
-        p3.setDescrizione("Massimo comfort termico con IA comportamentale. Impara le tue abitudini.");
-        p3.setCategoria(catHub);
-        prodottoRepository.save(p3);
+        upsertProdotto(
+                "ST-THM-01",
+                "Termostato Smart Modulare",
+                "Massimo comfort termico con IA comportamentale. Impara le tue abitudini.",
+                new BigDecimal("149.00"),
+                20,
+                true,
+                catHub
+        );
 
         // 3. Assistenza e Lavori per la Dashboard
         // Cancello vecchi lavori per non duplicare al riavvio
@@ -136,5 +144,39 @@ public class DataSeeder implements CommandLineRunner {
         installazione.setStato(StatoInstallazione.PROGRAMMATA);
         installazione.setDataPianificata(LocalDateTime.now().plusDays(2));
         installazioneRepository.save(installazione);
+    }
+
+    private Categoria upsertCategoria(String nome, String slug) {
+        return categoriaRepository.findBySlug(slug)
+                .map(existing -> {
+                    existing.setNome(nome);
+                    return categoriaRepository.save(existing);
+                })
+                .orElseGet(() -> categoriaRepository.save(new Categoria(null, nome, slug)));
+    }
+
+    private Prodotto upsertProdotto(String sku,
+                                    String nome,
+                                    String descrizione,
+                                    BigDecimal prezzo,
+                                    Integer quantitaDisponibile,
+                                    Boolean attivo,
+                                    Categoria categoria) {
+        return prodottoRepository.findBySku(sku)
+                .map(existing -> {
+                    existing.setNome(nome);
+                    existing.setDescrizione(descrizione);
+                    existing.setPrezzo(prezzo);
+                    existing.setQuantitaDisponibile(quantitaDisponibile);
+                    existing.setAttivo(attivo);
+                    existing.setCategoria(categoria);
+                    return prodottoRepository.save(existing);
+                })
+                .orElseGet(() -> {
+                    Prodotto nuovo = new Prodotto(sku, nome, prezzo, quantitaDisponibile, attivo);
+                    nuovo.setDescrizione(descrizione);
+                    nuovo.setCategoria(categoria);
+                    return prodottoRepository.save(nuovo);
+                });
     }
 }
